@@ -25,7 +25,7 @@ public class ConditionsCheckerTest {
         List<Integer> rowsToDelete = conditionsChecker.getIndexesOfFullRows(numberOfColumns);
 
         System.out.println("savedIndexes: " +savedIndexes.toString());
-        System.out.println("resultindexes: " +rowsToDelete.toString());
+        System.out.println("resultIndexes: " +rowsToDelete.toString());
 
         for(int i = 0; i < rowsToDelete.size(); i++){
            assertTrue(Objects.equals(rowsToDelete.get(i), rowsResultList.get(i)));
