@@ -9,7 +9,7 @@ Use dow key to speed up the brick's downward movement.
 
 The application's sample output:
 
-![sampleOutput](http://i.giphy.com/3owypfkM0bojX2GhLG.gif)
+![sampleOutput](https://media.giphy.com/media/3o7TKHs4TlPYx2foYg/giphy.gif)
 
 
 To generate a jar file of this project using maven:
