@@ -4,7 +4,6 @@ import com.mprtcz.tetris.abstractshapes.IShape;
 import com.mprtcz.tetris.abstractshapes.Shape;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.junit.Assert.assertTrue;
@@ -22,9 +21,7 @@ public class IShapeRotationTest {
     public void rotateShape90Deg(){
         Shape shape = new IShape(numberOfColumns, maxArrayIndex, savedIndexes);
         shape.setInitialCoordinate(initialCoordinate);
-        System.out.println("Before rotation: " + Arrays.toString(shape.getShapeCoordinates()));
         shape.rotateShape();
-        System.out.println("After rotation: " + Arrays.toString(shape.getShapeCoordinates()));
         int[] coordinates = shape.getShapeCoordinates();
 
         assertTrue(coordinates[0] == 230);
@@ -37,10 +34,8 @@ public class IShapeRotationTest {
     public void rotateShape180Deg(){
         Shape shape = new IShape(numberOfColumns, maxArrayIndex, savedIndexes);
         shape.setInitialCoordinate(initialCoordinate);
-        System.out.println("Before rotation: " + Arrays.toString(shape.getShapeCoordinates()));
         shape.rotateShape(); //90deg
         shape.rotateShape();//180deg
-        System.out.println("After rotation: " + Arrays.toString(shape.getShapeCoordinates()));
         int[] coordinates = shape.getShapeCoordinates();
 
         assertTrue(coordinates[0] == 230);
@@ -53,12 +48,10 @@ public class IShapeRotationTest {
     public void rotateShape270Deg(){
         Shape shape = new IShape(numberOfColumns, maxArrayIndex, savedIndexes);
         shape.setInitialCoordinate(initialCoordinate);
-        System.out.println("Before rotation: " + Arrays.toString(shape.getShapeCoordinates()));
         shape.rotateShape(); //90deg
         shape.rotateShape();//180deg
         shape.rotateShape();//270deg
 
-        System.out.println("After rotation: " + Arrays.toString(shape.getShapeCoordinates()));
         int[] coordinates = shape.getShapeCoordinates();
 
         assertTrue(coordinates[0] == 230);
@@ -71,12 +64,10 @@ public class IShapeRotationTest {
     public void rotateShape360Deg(){
         Shape shape = new IShape(numberOfColumns, maxArrayIndex, savedIndexes);
         shape.setInitialCoordinate(initialCoordinate);
-        System.out.println("Before rotation: " + Arrays.toString(shape.getShapeCoordinates()));
         shape.rotateShape(); //90deg
         shape.rotateShape();//180deg
         shape.rotateShape();//270deg
         shape.rotateShape();//360deg
-        System.out.println("After rotation: " + Arrays.toString(shape.getShapeCoordinates()));
         int[] coordinates = shape.getShapeCoordinates();
 
         assertTrue(coordinates[0] == 230);
@@ -89,11 +80,8 @@ public class IShapeRotationTest {
     public void moveRightTest() {
         Shape shape = new IShape(numberOfColumns, maxArrayIndex, savedIndexes);
         shape.setInitialCoordinate(initialCoordinate);
-        System.out.println(" Before right shift: " + Arrays.toString(shape.getShapeCoordinates()));
         shape.moveRight();
-        System.out.println("After right shift: " + Arrays.toString(shape.getShapeCoordinates()));
         int[] coordinates = shape.getShapeCoordinates();
-        System.out.println("coordinates: " + Arrays.toString(coordinates));
 
         assertTrue(coordinates[0] == 231);
         assertTrue(coordinates[1] == 251);
