@@ -3,6 +3,7 @@ package com.mprtcz.tetris.abstractshapes;
 import com.mprtcz.tetris.listoperators.ConditionsChecker;
 import com.mprtcz.tetris.logger.TetrisGameLogger;
 import com.mprtcz.tetris.rotator.Rotator;
+import javafx.scene.paint.Color;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -45,7 +46,7 @@ public abstract class Shape {
         }
     }
 
-    public static Shape getInstance(ShapeType shapeType, int numberOfColumns, int maxListIndex, Set<Integer> savedIndexes) {
+    public static Shape getInstance(ShapeType shapeType, int numberOfColumns, int maxListIndex, Map<Integer, Color> savedIndexes) {
         switch (shapeType) {
             case I_shape:
                 return new IShape(numberOfColumns, maxListIndex, savedIndexes);
@@ -64,11 +65,6 @@ public abstract class Shape {
             default:
                 return new IShape(numberOfColumns, maxListIndex, savedIndexes);
         }
-    }
-
-    public static Shape getRandomInstance(int numberOfColumns, int maxListIndex, HashSet<Integer> savedIndexes) {
-        ShapeType shapeType = ShapeType.randomShapeType();
-        return getInstance(shapeType, numberOfColumns, maxListIndex, savedIndexes);
     }
 
     public enum Orientation {
@@ -109,7 +105,7 @@ public abstract class Shape {
         }
     }
 
-    public Shape(int maxArrayIndex, int numberOfColumns, Set<Integer> savedIndexes) {
+    public Shape(int maxArrayIndex, int numberOfColumns, Map<Integer, Color> savedIndexes) {
         logger.log(level, "New Shape: " + this.getShapeType());
         this.initialCoordinate = numberOfColumns / 2;
         this.numberOfColumns = numberOfColumns;
@@ -117,6 +113,7 @@ public abstract class Shape {
         this.rotator = new Rotator(this);
         this.conditionsChecker = new ConditionsChecker(maxArrayIndex, numberOfColumns);
         this.conditionsChecker.setSavedIndexesList(savedIndexes);
+        this.color = getRandomColor();
     }
 
     private int initialCoordinate;
@@ -124,6 +121,7 @@ public abstract class Shape {
     private Orientation orientation;
     private Rotator rotator;
     private ConditionsChecker conditionsChecker;
+    private Color color;
 
 
     public abstract int[] getBasicCoordinates(int destinationIndex);
@@ -210,5 +208,37 @@ public abstract class Shape {
 
     public Orientation getOrientation() {
         return this.orientation;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    private Color getRandomColor(){
+        String[] mColors = {
+                "#39add1", // light blue
+                "#3079ab", // dark blue
+                "#c25975", // mauve
+                "#e15258", // red
+                "#f9845b", // orange
+                "#838cc7", // lavender
+                "#7d669e", // purple
+                "#53bbb4", // aqua
+                "#51b46d", // green
+                "#e0ab18", // mustard
+                "#637a91", // dark gray
+                "#f092b0", // pink
+                "#b7c0c7"  // light gray
+        };
+        Random randomGenerator = new Random();
+        int randomNumber = randomGenerator.nextInt(mColors.length);
+
+        String color = mColors[randomNumber];
+
+        return Color.web(color);
     }
 }

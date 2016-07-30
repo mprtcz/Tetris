@@ -2,6 +2,7 @@ package com.mprtcz.tetris.listoperators;
 
 import com.mprtcz.tetris.abstractshapes.Shape;
 import com.mprtcz.tetris.logger.TetrisGameLogger;
+import javafx.scene.paint.Color;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -14,7 +15,7 @@ public class ConditionsChecker {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
 
-    private Set<Integer> savedIndexesList = new HashSet<>();
+    private Map<Integer, Color> savedIndexesList = new HashMap<>();
     private int maxIndex;
 
     public void setNumberOfColumns(int numberOfColumns) {
@@ -23,7 +24,7 @@ public class ConditionsChecker {
 
     private int numberOfColumns;
 
-    public ConditionsChecker(Set<Integer> savedIndexesList, int maxIndex) {
+    public ConditionsChecker(Map<Integer, Color> savedIndexesList, int maxIndex) {
         this.savedIndexesList = savedIndexesList;
         this.maxIndex = maxIndex;
     }
@@ -33,7 +34,7 @@ public class ConditionsChecker {
         this.numberOfColumns = numberOfColumns;
     }
 
-    public void setSavedIndexesList(Set<Integer> savedIndexesList) {
+    public void setSavedIndexesList(Map<Integer, Color> savedIndexesList) {
         this.savedIndexesList = savedIndexesList;
     }
 
@@ -53,7 +54,7 @@ public class ConditionsChecker {
 
     private boolean checkIfIndexesExistInAList(int[] indexes) {
         for (int i : indexes) {
-            if (savedIndexesList.contains(i)) {
+            if (savedIndexesList.containsKey(i)) {
                 logger.log(level, "Index " + i + " exists in a list: " + savedIndexesList.toString());
                 return true;
             }
@@ -178,7 +179,7 @@ public class ConditionsChecker {
     private boolean checkIfRowIsFull(int row) {
         for (int i = 0; i < numberOfColumns; i++) {
             Integer index = row * numberOfColumns + i;
-            if (!savedIndexesList.contains(index)) {
+            if (!savedIndexesList.containsKey(index)) {
                 return false;
             }
         }
@@ -188,7 +189,7 @@ public class ConditionsChecker {
     private boolean checkIfRowIsEmpty(int row) {
         for (int i = 0; i < numberOfColumns; i++) {
             Integer index = row * numberOfColumns + i;
-            if (savedIndexesList.contains(index)) {
+            if (savedIndexesList.containsKey(index)) {
                 return false;
             }
         }

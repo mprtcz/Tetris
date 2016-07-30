@@ -4,7 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Created by Azet on 2016-05-26.
@@ -18,7 +18,7 @@ public class NextShapeCanvasDrawer extends CanvasDrawer {
     }
 
     @Override
-    public void drawListOfIndexes(HashSet<Integer> hashSet){
+    public void drawListOfIndexes(Map<Integer, Color> map){
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         int width = super.getBasicSquareSize() * super.getNumberOfColumns();
         int height = super.getBasicSquareSize() * (super.getNumberOfBasicSquares()/super.getNumberOfColumns());
@@ -26,8 +26,9 @@ public class NextShapeCanvasDrawer extends CanvasDrawer {
         graphicsContext.setStroke(Color.BLACK);
         graphicsContext.strokeRect(0, 0, width,
                 height);
-        for(Integer i : hashSet){
-            graphicsContext.fillRoundRect(super.getXCoordinate(i), super.getYCoordinate(i), super.getBasicSquareSize(), super.getBasicSquareSize(), 10, 10);
+        for(Map.Entry<Integer, Color> entry : map.entrySet()){
+            graphicsContext.setFill(entry.getValue());
+            graphicsContext.fillRoundRect(super.getXCoordinate(entry.getKey()), super.getYCoordinate(entry.getKey()), super.getBasicSquareSize(), super.getBasicSquareSize(), 10, 10);
         }
     }
 }

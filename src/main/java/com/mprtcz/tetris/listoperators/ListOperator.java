@@ -1,7 +1,8 @@
 package com.mprtcz.tetris.listoperators;
 
-import com.mprtcz.tetris.logger.TetrisGameLogger;
 import com.mprtcz.tetris.abstractshapes.Shape;
+import com.mprtcz.tetris.logger.TetrisGameLogger;
+import javafx.scene.paint.Color;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -14,42 +15,42 @@ public class ListOperator {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
 
-    private HashSet<Integer> savedIndexes;
+    private Map<Integer, Color> savedIndexes;
     private int maxIndex;
     private int numberOfColumns;
 
     public ListOperator(int maxIndex, int numberOfColumns) {
-        this.savedIndexes = new HashSet<>();
+        this.savedIndexes = new HashMap<>();
         this.maxIndex = maxIndex;
         this.numberOfColumns = numberOfColumns;
     }
 
-    public HashSet<Integer> getSavedIndexes() {
+    public Map<Integer, Color> getSavedIndexes() {
         return savedIndexes;
     }
 
-    public void setSavedIndexes(HashSet<Integer> savedIndexes) {
+    public void setSavedIndexes(Map<Integer, Color> savedIndexes) {
         this.savedIndexes = savedIndexes;
     }
 
-    public HashSet<Integer> getIndexesToDraw(Shape shape) {
-        HashSet<Integer> toDrawList = new HashSet<>();
-        for (Integer i : savedIndexes) {
-            toDrawList.add(i);
+    public Map<Integer, Color> getIndexesToDraw(Shape shape) {
+        Map<Integer, Color> toDrawList = new HashMap<>();
+        for (Map.Entry<Integer, Color> i : savedIndexes.entrySet()) {
+            toDrawList.put(i.getKey(), i.getValue());
         }
         if (shape != null) {
             for (Integer i : shape.getShapeCoordinates()) {
-                toDrawList.add(i);
+                toDrawList.put(i, shape.getColor());
             }
         }
         return toDrawList;
     }
 
-    public HashSet<Integer> drawShape(Shape shape){
-        HashSet<Integer> toDrawList = new HashSet<>();
+    public Map<Integer, Color> drawShape(Shape shape){
+        Map<Integer, Color> toDrawList = new HashMap<>();
         if (shape != null) {
             for (Integer i : shape.getCoordinatesForIndex(3)) {
-                toDrawList.add(i);
+                toDrawList.put(i, shape.getColor());
             }
         }
         return toDrawList;
@@ -57,8 +58,8 @@ public class ListOperator {
 
     public void addIndexesToList(Shape shape) {
         for (Integer i : shape.getShapeCoordinates()) {
-            if (!savedIndexes.contains(i)) {
-                savedIndexes.add(i);
+            if (!savedIndexes.containsKey(i)) {
+                savedIndexes.put(i, shape.getColor());
             }
         }
     }
@@ -66,9 +67,12 @@ public class ListOperator {
     public int removeFullRowsFromSavedIndexes(int points) {
         ConditionsChecker conditionsChecker = new ConditionsChecker(savedIndexes, maxIndex);
         List<Integer> rowsToRemove = conditionsChecker.getIndexesOfFullRows(numberOfColumns);
+        List<Integer> indexesToRemove = getIndexesFromRowsToRemove(rowsToRemove);
         if (rowsToRemove.size() > 0) {
             points += rowsToRemove.size() * 10;
-            savedIndexes.removeAll(getIndexesFromRowsToRemove(rowsToRemove));
+            for(Integer i : indexesToRemove) {
+                savedIndexes.remove(i);
+            }
             pullRemainingBricksDown(rowsToRemove);
         }
         return points;
@@ -86,12 +90,13 @@ public class ListOperator {
 
     private void pullRemainingBricksDown(List<Integer> rowsToRemove) {
         for(int i : rowsToRemove){
-            HashSet<Integer> movedIndexes = new HashSet<>();
-            for(Integer index : savedIndexes){
-                if(index < (i * numberOfColumns)){
-                    movedIndexes.add(index+numberOfColumns);
+            Map<Integer, Color> movedIndexes = new HashMap<>();
+            for(Map.Entry<Integer, Color> index : savedIndexes.entrySet()){
+                if(index.getKey() < (i * numberOfColumns)){
+                    int newIndex = index.getKey() + numberOfColumns;
+                    movedIndexes.put(newIndex, index.getValue());
                 } else {
-                    movedIndexes.add(index);
+                    movedIndexes.put(index.getKey(), index.getValue());
                 }
             }
             savedIndexes = movedIndexes;
@@ -100,7 +105,7 @@ public class ListOperator {
 
     public boolean canShapeBeAddedToGame(Shape shape){
         for(int i : shape.getShapeCoordinates()){
-            if(savedIndexes.contains(i)){
+            if(savedIndexes.containsKey(i)){
                 return false;
             }
         }

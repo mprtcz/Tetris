@@ -1,8 +1,9 @@
 package com.mprtcz.tetris.abstractshapes;
 
 import com.mprtcz.tetris.logger.TetrisGameLogger;
+import javafx.scene.paint.Color;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +16,7 @@ public class JShape extends Shape{
 
     private int numberOfColumns;
 
-    public JShape(int numberOfColumns, int maxArrayIndex, Set<Integer> savedIndexes){
+    public JShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes){
         super(maxArrayIndex, numberOfColumns, savedIndexes);
         this.numberOfColumns = numberOfColumns;
     }

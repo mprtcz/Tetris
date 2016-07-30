@@ -1,6 +1,7 @@
 package com.mprtcz.tetris2;
 
 import com.mprtcz.tetris.listoperators.ConditionsChecker;
+import javafx.scene.paint.Color;
 import org.junit.Test;
 
 import java.util.*;
@@ -15,7 +16,7 @@ public class ConditionsCheckerTest {
     private Integer[] rowsResultArray = new Integer[]{0,2};
     Integer[] indexesToRemoveArray = new Integer[]{0,1,2,3,10,11,13,14};
     private List<Integer> rowsResultList = new ArrayList<>(Arrays.asList(rowsResultArray));
-    private HashSet<Integer> savedIndexes = new HashSet<>(Arrays.asList(array));
+    private Map<Integer, Color> savedIndexes = new HashMap<>();
     private int maxIndex = 15;
     private int numberOfColumns = 4;
 

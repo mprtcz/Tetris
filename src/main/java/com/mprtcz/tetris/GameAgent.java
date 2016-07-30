@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +35,7 @@ public class GameAgent {
     private NextShapeCanvasDrawer nextShapeCanvasDrawer;
     private Player player;
     private boolean playMusic = false;
+    private Shape nextShapeToDraw;
 
     private boolean gameRunning = false;
 
@@ -68,10 +69,12 @@ public class GameAgent {
 
             shape = Shape.getInstance(nextShapeType, canvasDrawer.getNumberOfColumns(),
                     canvasDrawer.getNumberOfBasicSquares(), listOperator.getSavedIndexes());
+            if(nextShapeToDraw!=null) {
+                shape.setColor(nextShapeToDraw.getColor());
+            }
 
             nextShapeType = Shape.ShapeType.randomShapeType();
-
-            Shape nextShapeToDraw = Shape.getInstance(nextShapeType, 6, 17, new HashSet<>());
+            nextShapeToDraw = Shape.getInstance(nextShapeType, 6, 17, new HashMap<>());
 
             Platform.runLater(() -> nextShapeCanvasDrawer.drawListOfIndexes(nextShapeListOperator.drawShape(nextShapeToDraw)));
 

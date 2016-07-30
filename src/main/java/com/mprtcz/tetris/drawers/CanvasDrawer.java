@@ -5,7 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.HashSet;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,13 +40,14 @@ public class CanvasDrawer {
         this.numberOfBasicSquares = numberOfColumns * (int) (canvas.getHeight()/basicSquareSize);
     }
 
-    public void drawListOfIndexes(HashSet<Integer> list){
+    public void drawListOfIndexes(Map<Integer, Color> list){
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.clearRect(0, 0, graphicsContext.getCanvas().getWidth(), graphicsContext.getCanvas().getHeight());
         graphicsContext.setStroke(Color.BLACK);
         graphicsContext.strokeRect(0, 0, (numberOfColumns*basicSquareSize), (basicSquareSize*numberOfBasicSquares/numberOfColumns));
-        for(Integer i : list){
-            graphicsContext.fillRoundRect(getXCoordinate(i), getYCoordinate(i), basicSquareSize, basicSquareSize, 10, 10);
+        for(Map.Entry<Integer, Color> entry : list.entrySet()){
+            graphicsContext.setFill(entry.getValue());
+            graphicsContext.fillRoundRect(getXCoordinate(entry.getKey()), getYCoordinate(entry.getKey()), basicSquareSize, basicSquareSize, 10, 10);
         }
     }
 

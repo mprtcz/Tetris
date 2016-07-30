@@ -2,9 +2,11 @@ package com.mprtcz.tetris2.rotationtests;
 
 import com.mprtcz.tetris.abstractshapes.IShape;
 import com.mprtcz.tetris.abstractshapes.Shape;
+import javafx.scene.paint.Color;
 import org.junit.Test;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
@@ -15,7 +17,7 @@ public class IShapeRotationTest {
     private int numberOfColumns = 20;
     private int maxArrayIndex = 380;
     private int initialCoordinate = 230;
-    private HashSet<Integer> savedIndexes = new HashSet<>();
+    private Map<Integer, Color> savedIndexes = new HashMap<>();
 
     @Test
     public void rotateShape90Deg(){
