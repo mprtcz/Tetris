@@ -33,14 +33,14 @@ public class GameAgent {
     private TextField pointsTextField;
     private int points;
     private NextShapeCanvasDrawer nextShapeCanvasDrawer;
-    private Shape nextShape;
     private Player player;
-    private Shape.ShapeType nextShapeType;
     private boolean playMusic = false;
 
     private boolean gameRunning = false;
 
     GameAgent(Canvas gameCanvas, Canvas nextBrickCanvas, TextField pointsTextField) {
+        logger.log(level, "gameCanvas = [" + gameCanvas + "], nextBrickCanvas = [" + nextBrickCanvas + "]," +
+                " pointsTextField = [" + pointsTextField + "]");
         this.canvas = gameCanvas;
         this.nextBrickCanvas = nextBrickCanvas;
         this.pointsTextField = pointsTextField;
@@ -49,7 +49,6 @@ public class GameAgent {
     }
 
     void startGame() {
-        System.out.println("playMusic = " + playMusic);
         if (playMusic) {
             player.playMusic();
         }
@@ -62,9 +61,6 @@ public class GameAgent {
         canvasDrawer.drawListOfIndexes(listOperator.getSavedIndexes());
         nextShapeCanvasDrawer = new NextShapeCanvasDrawer(nextBrickCanvas);
 
-        nextShape = Shape.getRandomInstance(canvasDrawer.getNumberOfColumns(), canvasDrawer.getNumberOfBasicSquares(),
-                listOperator.getSavedIndexes());
-
         gameRunning = true;
         ListOperator nextShapeListOperator = new ListOperator(17, 6);
 
@@ -74,8 +70,6 @@ public class GameAgent {
                     canvasDrawer.getNumberOfBasicSquares(), listOperator.getSavedIndexes());
 
             nextShapeType = Shape.ShapeType.randomShapeType();
-
-            nextShape = Shape.getInstance(Shape.ShapeType.T_shape, canvasDrawer.getNumberOfColumns(), canvasDrawer.getNumberOfBasicSquares(), listOperator.getSavedIndexes());
 
             Shape nextShapeToDraw = Shape.getInstance(nextShapeType, 6, 17, new HashSet<>());
 
@@ -101,13 +95,14 @@ public class GameAgent {
             listOperator.addIndexesToList(shape);
             shape = null;
             points = listOperator.removeFullRowsFromSavedIndexes(points);
+
             Platform.runLater(() -> pointsTextField.setText(String.valueOf(points)));
             Platform.runLater(() -> canvasDrawer.drawListOfIndexes(listOperator.getIndexesToDraw(shape)));
         }
-
     }
 
     void handleKeyReleasedEvents(KeyEvent event) {
+        logger.log(level, "event = [" + event + "]");
         if (shape != null) {
             if (event.getCode() == KeyCode.UP) {
                 shape.rotateShape();
@@ -129,6 +124,7 @@ public class GameAgent {
     }
 
     void terminateGame() {
+        logger.log(level, "Game terminated");
         gameRunning = false;
         player.stopMusic();
         playMusic = false;
@@ -136,6 +132,7 @@ public class GameAgent {
     }
 
     void setMusic(boolean value) {
+        logger.log(level, "value = [" + value + "]");
         if (!value) {
             player.stopMusic();
         } else {

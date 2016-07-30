@@ -28,6 +28,8 @@ public class Player {
     }
 
     public void stopMusic(){
-        mediaPlayer.stop();
+        if(mediaPlayer!=null) {
+            mediaPlayer.stop();
+        }
     }
 }

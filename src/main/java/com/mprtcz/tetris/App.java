@@ -16,10 +16,13 @@ import java.util.logging.Logger;
 public class App extends javafx.application.Application {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.INFO;
+    private static boolean isLogger = false;
 
     @Override
     public void start(Stage window) throws Exception {
-        TetrisGameLogger.initializeLogger();
+        if(isLogger) {
+            TetrisGameLogger.initializeLogger();
+        }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main.fxml"));
         System.out.println(loader.getLocation());
@@ -39,6 +42,11 @@ public class App extends javafx.application.Application {
     }
 
     public static void main(String[] args) {
+        if(args.length>0){
+            if(args[0].equals("-log")){
+                isLogger = true;
+            }
+        }
         launch(args);
     }
 }
