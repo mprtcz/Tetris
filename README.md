@@ -1,7 +1,7 @@
 # Tetris
 
 A Java application implementing popular [Tetris](https://en.wikipedia.org/wiki/Tetris) game.
-Optionally, at the top of the window there is a checkbox which allows the application to play music during gameplay.
+At the top of the window there is a checkbox which allows the application to play music during gameplay.
 
 Use left and right arrow keys to navigate falling brick sideways,
 Use spacebar or up key to rotate the brick counterclockwise.
@@ -9,7 +9,7 @@ Use dow key to speed up the brick's downward movement.
 
 The application's sample output:
 
-![sampleOutput](https://sc-cdn.scaleengine.net/i/05ab5439de7daf6c28643c7b7d698e805.png)
+![sampleOutput](http://i.giphy.com/3owypfkM0bojX2GhLG.gif)
 
 
 To generate a jar file of this project using maven:

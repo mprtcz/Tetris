@@ -28,7 +28,7 @@ public class App extends javafx.application.Application {
         System.out.println(loader.getLocation());
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 1024, 768);
+        Scene scene = new Scene(root, 800, 600);
 
         window.setOnCloseRequest(e -> {
             logger.log(level, "Close Requested.");
