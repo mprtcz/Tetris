@@ -3,6 +3,8 @@
 A Java application implementing popular [Tetris](https://en.wikipedia.org/wiki/Tetris) game.
 At the top of the window there is a checkbox which allows the application to play music during gameplay.
 
+The music's source: [Tetris Meets Metal - Youtube](https://www.youtube.com/watch?v=lGkyL_MF-lw)
+
 Use left and right arrow keys to navigate falling brick sideways,
 Use spacebar or up key to rotate the brick counterclockwise.
 Use dow key to speed up the brick's downward movement.
