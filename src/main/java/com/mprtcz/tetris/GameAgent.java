@@ -61,16 +61,13 @@ public class GameAgent {
         }
 
         canvasDrawer = new CanvasDrawer(canvas);
-        listOperator = new ListOperator(canvasDrawer.getNumberOfBasicSquares(), canvasDrawer.getNumberOfColumns());
+        listOperator = new ListOperator(canvasDrawer.getNumberOfColumns(), canvasDrawer.getNumberOfBasicSquares());
 
         initializeNextShape();
-
-        canvasDrawer.drawListOfIndexes(listOperator.getSavedIndexes());
 
         gameRunning = true;
 
         while (gameRunning) {
-
             shape = Shape.getInstance(nextShapeType, canvasDrawer.getNumberOfColumns(),
                     canvasDrawer.getNumberOfBasicSquares(), listOperator.getSavedIndexes());
 
@@ -78,10 +75,9 @@ public class GameAgent {
                 shape.setColor(nextShapeToDraw.getColor());
             }
 
-            pickAdnDrawNextShape();
+            pickAndDrawNextShape();
 
             gameRunning = listOperator.canShapeBeAddedToGame(shape);
-
 
             sleepingTime = SLEEPING_TIME;
             while (shape.pullShapeIndexesDown() && gameRunning) {
@@ -117,10 +113,10 @@ public class GameAgent {
     private void initializeNextShape() {
         nextShapeType = Shape.ShapeType.randomShapeType();
         nextShapeCanvasDrawer = new NextShapeCanvasDrawer(nextBrickCanvas);
-        nextShapeListOperator = new ListOperator(17, 6);
+        nextShapeListOperator = new ListOperator(6, 17);
     }
 
-    private void pickAdnDrawNextShape() {
+    private void pickAndDrawNextShape() {
         nextShapeType = Shape.ShapeType.randomShapeType();
         nextShapeToDraw = Shape.getInstance(nextShapeType, 6, 17, new HashMap<>());
 
@@ -182,5 +178,4 @@ public class GameAgent {
         graphicsContext.setFill(Color.BLACK);
         graphicsContext.fillText(endMessageString, canvasMiddleWidth, canvasMiddleHeight);
     }
-
 }

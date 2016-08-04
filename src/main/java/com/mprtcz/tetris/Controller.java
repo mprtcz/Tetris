@@ -24,15 +24,15 @@ public class Controller {
     public TextField pointsTextField;
     public CheckBox musicCheckBox;
 
-    public void onStartButtonClicked(){
+    public void onStartButtonClicked() {
 
-        if(gameAgent!=null){
+        if (gameAgent != null) {
             gameAgent.terminateGame();
         }
 
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for(Thread t: threadSet){
-            if(t.getName().equals("GameThread")){
+        for (Thread t : threadSet) {
+            if (t.getName().equals("GameThread")) {
                 try {
                     t.join();
                 } catch (InterruptedException e) {
@@ -49,17 +49,17 @@ public class Controller {
         thread.start();
     }
 
-    public void onMusicCheckboxClicked(){
-        if(gameAgent!=null){
+    public void onMusicCheckboxClicked() {
+        if (gameAgent != null) {
             gameAgent.setMusic(musicCheckBox.isSelected());
         }
     }
 
-    private void playGameAgent(){
+    private void playGameAgent() {
         gameAgent.startGame();
     }
 
-    public void initialize(){
+    public void initialize() {
         startButton.setOnKeyReleased(event -> gameAgent.handleKeyReleasedEvents(event));
 
         startButton.setOnKeyPressed(event -> gameAgent.handleKeyPressedEvents(event));

@@ -19,7 +19,7 @@ public class ListOperator {
     private int maxIndex;
     private int numberOfColumns;
 
-    public ListOperator(int maxIndex, int numberOfColumns) {
+    public ListOperator(int numberOfColumns, int maxIndex) {
         this.savedIndexes = new HashMap<>();
         this.maxIndex = maxIndex;
         this.numberOfColumns = numberOfColumns;
@@ -46,7 +46,7 @@ public class ListOperator {
         return toDrawList;
     }
 
-    public Map<Integer, Color> drawShape(Shape shape){
+    public Map<Integer, Color> drawShape(Shape shape) {
         Map<Integer, Color> toDrawList = new HashMap<>();
         if (shape != null) {
             for (Integer i : shape.getCoordinatesForIndex(3)) {
@@ -70,7 +70,7 @@ public class ListOperator {
         List<Integer> indexesToRemove = getIndexesFromRowsToRemove(rowsToRemove);
         if (rowsToRemove.size() > 0) {
             points += rowsToRemove.size() * 10;
-            for(Integer i : indexesToRemove) {
+            for (Integer i : indexesToRemove) {
                 savedIndexes.remove(i);
             }
             pullRemainingBricksDown(rowsToRemove);
@@ -89,10 +89,10 @@ public class ListOperator {
     }
 
     private void pullRemainingBricksDown(List<Integer> rowsToRemove) {
-        for(int i : rowsToRemove){
+        for (int i : rowsToRemove) {
             Map<Integer, Color> movedIndexes = new HashMap<>();
-            for(Map.Entry<Integer, Color> index : savedIndexes.entrySet()){
-                if(index.getKey() < (i * numberOfColumns)){
+            for (Map.Entry<Integer, Color> index : savedIndexes.entrySet()) {
+                if (index.getKey() < (i * numberOfColumns)) {
                     int newIndex = index.getKey() + numberOfColumns;
                     movedIndexes.put(newIndex, index.getValue());
                 } else {
@@ -103,9 +103,9 @@ public class ListOperator {
         }
     }
 
-    public boolean canShapeBeAddedToGame(Shape shape){
-        for(int i : shape.getShapeCoordinates()){
-            if(savedIndexes.containsKey(i)){
+    public boolean canShapeBeAddedToGame(Shape shape) {
+        for (int i : shape.getShapeCoordinates()) {
+            if (savedIndexes.containsKey(i)) {
                 return false;
             }
         }

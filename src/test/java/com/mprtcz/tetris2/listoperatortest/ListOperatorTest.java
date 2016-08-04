@@ -28,7 +28,7 @@ public class ListOperatorTest {
 
     @Test
     public void removeFullRowsFromSavedIndexesTest(){
-        ListOperator listOperator = new ListOperator(maxIndex, numberOfColumns);
+        ListOperator listOperator = new ListOperator(numberOfColumns, maxIndex);
         listOperator.setSavedIndexes(savedIndexes);
         listOperator.removeFullRowsFromSavedIndexes(points);
 

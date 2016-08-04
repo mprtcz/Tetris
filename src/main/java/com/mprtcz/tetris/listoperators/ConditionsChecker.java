@@ -94,7 +94,7 @@ public class ConditionsChecker {
     }
 
     public boolean checkAllRotatingConditions(Shape shape) {
-        logger.log(level, "Checking rotating conditions for shape: " +shape.toString());
+        logger.log(level, "Checking rotating conditions for shape: " + shape.toString());
         boolean borderCondition = false;
         Shape.Orientation orientation = shape.getOrientation();
         int[] targetCoordinates = shape.getNextOrientationCoordinates();
@@ -104,7 +104,7 @@ public class ConditionsChecker {
         } else if (orientation == Shape.Orientation.DEG90 || orientation == Shape.Orientation.DEG180) {
             borderCondition = checkLeftBorderConditions(shape);
         } else {
-            logger.log(level, "Strange orientation! " +orientation.toString());
+            logger.log(level, "Strange orientation! " + orientation.toString());
             borderCondition = true;
         }
 
@@ -113,7 +113,7 @@ public class ConditionsChecker {
     }
 
     private boolean checkLeftBorderConditions(Shape shape) {
-        logger.log(level, "Checking rotating conditions for shape: " +shape.toString());
+        logger.log(level, "Checking rotating conditions for shape: " + shape.toString());
         int[] initialCoordinates = shape.getShapeCoordinates();
         int[] targetCoordinates = shape.getNextOrientationCoordinates();
 
@@ -132,7 +132,7 @@ public class ConditionsChecker {
     }
 
     private boolean checkRightBorderConditions(Shape shape) {
-        logger.log(level, "Checking rotating conditions for shape: " +shape.toString());
+        logger.log(level, "Checking rotating conditions for shape: " + shape.toString());
         int[] initialCoordinates = shape.getShapeCoordinates();
         int[] targetCoordinates = shape.getNextOrientationCoordinates();
 
