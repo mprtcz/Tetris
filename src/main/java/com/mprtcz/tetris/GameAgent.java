@@ -7,10 +7,14 @@ import com.mprtcz.tetris.listoperators.ListOperator;
 import com.mprtcz.tetris.logger.TetrisGameLogger;
 import com.mprtcz.tetris.music.Player;
 import javafx.application.Platform;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -36,6 +40,8 @@ public class GameAgent {
     private Player player;
     private boolean playMusic = false;
     private Shape nextShapeToDraw;
+    private ListOperator nextShapeListOperator;
+    private Shape.ShapeType nextShapeType;
 
     private boolean gameRunning = false;
 
@@ -57,37 +63,31 @@ public class GameAgent {
         canvasDrawer = new CanvasDrawer(canvas);
         listOperator = new ListOperator(canvasDrawer.getNumberOfBasicSquares(), canvasDrawer.getNumberOfColumns());
 
-        Shape.ShapeType nextShapeType = Shape.ShapeType.randomShapeType();
+        initializeNextShape();
 
         canvasDrawer.drawListOfIndexes(listOperator.getSavedIndexes());
-        nextShapeCanvasDrawer = new NextShapeCanvasDrawer(nextBrickCanvas);
 
         gameRunning = true;
-        ListOperator nextShapeListOperator = new ListOperator(17, 6);
 
         while (gameRunning) {
 
             shape = Shape.getInstance(nextShapeType, canvasDrawer.getNumberOfColumns(),
                     canvasDrawer.getNumberOfBasicSquares(), listOperator.getSavedIndexes());
-            if(nextShapeToDraw!=null) {
+
+            if (nextShapeToDraw != null) {
                 shape.setColor(nextShapeToDraw.getColor());
             }
 
-            nextShapeType = Shape.ShapeType.randomShapeType();
-            nextShapeToDraw = Shape.getInstance(nextShapeType, 6, 17, new HashMap<>());
-
-            Platform.runLater(() -> nextShapeCanvasDrawer.drawListOfIndexes(nextShapeListOperator.drawShape(nextShapeToDraw)));
+            pickAdnDrawNextShape();
 
             gameRunning = listOperator.canShapeBeAddedToGame(shape);
-            if (!gameRunning) {
-                player.stopMusic();
-                //TODO endgame screen
-            }
+
 
             sleepingTime = SLEEPING_TIME;
             while (shape.pullShapeIndexesDown() && gameRunning) {
 
-                Platform.runLater(() -> canvasDrawer.drawListOfIndexes(listOperator.getIndexesToDraw(shape)));
+                drawOnCanvasDrawer();
+
                 try {
                     Thread.sleep(sleepingTime);
                 } catch (InterruptedException e) {
@@ -100,8 +100,31 @@ public class GameAgent {
             points = listOperator.removeFullRowsFromSavedIndexes(points);
 
             Platform.runLater(() -> pointsTextField.setText(String.valueOf(points)));
-            Platform.runLater(() -> canvasDrawer.drawListOfIndexes(listOperator.getIndexesToDraw(shape)));
+
+            drawOnCanvasDrawer();
+
+            if (!gameRunning) {
+                player.stopMusic();
+                displayEndScreen();
+            }
         }
+    }
+
+    private void drawOnCanvasDrawer() {
+        Platform.runLater(() -> canvasDrawer.drawListOfIndexes(listOperator.getIndexesToDraw(shape)));
+    }
+
+    private void initializeNextShape() {
+        nextShapeType = Shape.ShapeType.randomShapeType();
+        nextShapeCanvasDrawer = new NextShapeCanvasDrawer(nextBrickCanvas);
+        nextShapeListOperator = new ListOperator(17, 6);
+    }
+
+    private void pickAdnDrawNextShape() {
+        nextShapeType = Shape.ShapeType.randomShapeType();
+        nextShapeToDraw = Shape.getInstance(nextShapeType, 6, 17, new HashMap<>());
+
+        Platform.runLater(() -> nextShapeCanvasDrawer.drawListOfIndexes(nextShapeListOperator.drawShape(nextShapeToDraw)));
     }
 
     void handleKeyReleasedEvents(KeyEvent event) {
@@ -141,6 +164,23 @@ public class GameAgent {
         } else {
             player.playMusic();
         }
+    }
+
+    private void displayEndScreen() {
+        System.out.println("end screen");
+        final double canvasMiddleWidth = Math.round(canvas.getWidth() / 2);
+        final double canvasMiddleHeight = Math.round(canvas.getHeight() / 2);
+
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        graphicsContext.setTextAlign(TextAlignment.CENTER);
+        graphicsContext.setTextBaseline(VPos.CENTER);
+
+        String endMessageString = "Game over! Your score: " +
+                points +
+                "\n Hit START to try again";
+
+        graphicsContext.setFill(Color.BLACK);
+        graphicsContext.fillText(endMessageString, canvasMiddleWidth, canvasMiddleHeight);
     }
 
 }
