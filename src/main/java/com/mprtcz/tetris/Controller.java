@@ -19,10 +19,11 @@ public class Controller {
 
     public Canvas gameCanvas;
     public Button startButton;
-    private GameAgent gameAgent;
     public Canvas nextBrickCanvas;
     public TextField pointsTextField;
     public CheckBox musicCheckBox;
+
+    private GameAgent gameAgent;
 
     public void onStartButtonClicked() {
 

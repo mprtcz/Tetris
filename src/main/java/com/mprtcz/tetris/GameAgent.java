@@ -29,18 +29,24 @@ public class GameAgent {
 
     private CanvasDrawer canvasDrawer;
     private ListOperator listOperator;
-    private Shape shape;
-    private int sleepingTime;
     private Canvas canvas;
-    private final int SLEEPING_TIME = 300;
+
+    private NextShapeCanvasDrawer nextShapeCanvasDrawer;
+    private ListOperator nextShapeListOperator;
+
     private Canvas nextBrickCanvas;
+    private Shape shape;
+
+    private Shape nextShapeToDraw;
+    private int sleepingTime;
+
+    private final int SLEEPING_TIME = 300;
     private TextField pointsTextField;
     private int points;
-    private NextShapeCanvasDrawer nextShapeCanvasDrawer;
+
     private Player player;
     private boolean playMusic = false;
-    private Shape nextShapeToDraw;
-    private ListOperator nextShapeListOperator;
+
     private Shape.ShapeType nextShapeType;
 
     private boolean gameRunning = false;
