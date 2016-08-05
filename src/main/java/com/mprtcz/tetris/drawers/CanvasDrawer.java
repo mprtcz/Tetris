@@ -1,9 +1,11 @@
 package com.mprtcz.tetris.drawers;
 
 import com.mprtcz.tetris.logger.TetrisGameLogger;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -49,6 +51,24 @@ public class CanvasDrawer {
             graphicsContext.setFill(entry.getValue());
             graphicsContext.fillRoundRect(getXCoordinate(entry.getKey()), getYCoordinate(entry.getKey()), basicSquareSize, basicSquareSize, 10, 10);
         }
+    }
+
+    public void drawEndScreen(String points){
+        logger.log(level, "End screen");
+
+        final double canvasMiddleWidth = Math.round(canvas.getWidth() / 2);
+        final double canvasMiddleHeight = Math.round(canvas.getHeight() / 2);
+
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        graphicsContext.setTextAlign(TextAlignment.CENTER);
+        graphicsContext.setTextBaseline(VPos.CENTER);
+
+        String endMessageString = "Game over! Your score: " +
+                points +
+                "\n Hit START to try again";
+
+        graphicsContext.setFill(Color.BLACK);
+        graphicsContext.fillText(endMessageString, canvasMiddleWidth, canvasMiddleHeight);
     }
 
     int getXCoordinate(int index){

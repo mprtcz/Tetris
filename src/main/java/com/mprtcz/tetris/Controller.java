@@ -26,28 +26,34 @@ public class Controller {
     private GameAgent gameAgent;
 
     public void onStartButtonClicked() {
-
         if (gameAgent != null) {
-            gameAgent.terminateGame();
-        }
 
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for (Thread t : threadSet) {
-            if (t.getName().equals("GameThread")) {
-                try {
-                    t.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            startButton.setText(buttonText.START_GAME.getText());
+
+            gameAgent.terminateGame();
+
+            gameAgent = null;
+
+            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+            for (Thread t : threadSet) {
+                if (t.getName().equals("GameThread")) {
+                    try {
+                        t.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+        } else {
+            startButton.setText(buttonText.STOP_GAME.getText());
+
+            gameAgent = new GameAgent(gameCanvas, nextBrickCanvas, pointsTextField);
+            gameAgent.setMusic(musicCheckBox.isSelected());
+
+            Thread thread = new Thread(this::playGameAgent);
+            thread.setName("GameThread");
+            thread.start();
         }
-
-        gameAgent = new GameAgent(gameCanvas, nextBrickCanvas, pointsTextField);
-        gameAgent.setMusic(musicCheckBox.isSelected());
-
-        Thread thread = new Thread(this::playGameAgent);
-        thread.setName("GameThread");
-        thread.start();
     }
 
     public void onMusicCheckboxClicked() {
@@ -64,5 +70,20 @@ public class Controller {
         startButton.setOnKeyReleased(event -> gameAgent.handleKeyReleasedEvents(event));
 
         startButton.setOnKeyPressed(event -> gameAgent.handleKeyPressedEvents(event));
+    }
+
+    private enum buttonText {
+        STOP_GAME("Stop Game"),
+        START_GAME("START");
+
+        private String text;
+
+        buttonText(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
     }
 }

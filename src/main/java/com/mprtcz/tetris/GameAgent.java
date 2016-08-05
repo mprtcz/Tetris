@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 /**
  * Created by Azet on 2016-05-20.
  */
-public class GameAgent {
+class GameAgent {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
 
@@ -104,12 +104,10 @@ public class GameAgent {
             Platform.runLater(() -> pointsTextField.setText(String.valueOf(points)));
 
             drawOnCanvasDrawer();
-
-            if (!gameRunning) {
-                player.stopMusic();
-                displayEndScreen();
-            }
         }
+
+        player.stopMusic();
+        Platform.runLater(() -> canvasDrawer.drawEndScreen(String.valueOf(points)));
     }
 
     private void drawOnCanvasDrawer() {
@@ -169,7 +167,8 @@ public class GameAgent {
     }
 
     private void displayEndScreen() {
-        System.out.println("end screen");
+        logger.log(level, "End screen");
+
         final double canvasMiddleWidth = Math.round(canvas.getWidth() / 2);
         final double canvasMiddleHeight = Math.round(canvas.getHeight() / 2);
 
