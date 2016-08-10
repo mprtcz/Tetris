@@ -26,9 +26,12 @@ public class Controller {
     private GameAgent gameAgent;
 
     public void onStartButtonClicked() {
-        if (gameAgent != null) {
+        buttonText buttonState;
 
-            startButton.setText(buttonText.START_GAME.getText());
+        if (gameAgent != null) {
+            buttonState = buttonText.START_GAME;
+
+            startButton.setText(buttonState.getText());
 
             gameAgent.terminateGame();
 
@@ -45,7 +48,9 @@ public class Controller {
                 }
             }
         } else {
-            startButton.setText(buttonText.STOP_GAME.getText());
+            buttonState = buttonText.STOP_GAME;
+
+            startButton.setText(buttonState.getText());
 
             gameAgent = new GameAgent(gameCanvas, nextBrickCanvas, pointsTextField);
             gameAgent.setMusic(musicCheckBox.isSelected());
