@@ -8,7 +8,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="426.0" prefWidth="629.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mprtcz.tetris.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="426.0" prefWidth="629.0" style="-fx-background-color: #e5fffc;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mprtcz.tetris.Controller">
    <center>
       <VBox alignment="CENTER" prefHeight="441.0" prefWidth="414.0" BorderPane.alignment="CENTER">
          <children>
@@ -16,10 +16,6 @@
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin></Canvas>
-            <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#onStartButtonClicked" text="START">
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin></Button>
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -38,23 +34,44 @@
                   <Insets right="10.0" />
                </VBox.margin></TextField>
          </children>
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
       </VBox>
    </right>
    <left>
-      <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
+      <VBox BorderPane.alignment="TOP_LEFT">
          <children>
-            <Label text="Next Brick">
+            <Label text="Next Brick" textAlignment="CENTER" underline="true">
                <VBox.margin>
-                  <Insets top="80.0" />
+                  <Insets />
                </VBox.margin></Label>
             <Canvas fx:id="nextBrickCanvas" height="200.0" width="166.0" BorderPane.alignment="CENTER" />
          </children>
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
       </VBox>
    </left>
    <top>
-      <CheckBox fx:id="musicCheckBox" focusTraversable="false" mnemonicParsing="false" onAction="#onMusicCheckboxClicked" selected="true" text="Music" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER">
          <BorderPane.margin>
-            <Insets top="10.0" />
-         </BorderPane.margin></CheckBox>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+         <children>
+            <Label text="Tetris - Hit START to start a game, uncheck Music checkbox if you don't want music to play" textAlignment="JUSTIFY" underline="true" />
+         </children>
+      </HBox>
    </top>
+   <bottom>
+      <HBox alignment="CENTER" spacing="10.0">
+         <children>
+            <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#onStartButtonClicked" text="START" BorderPane.alignment="CENTER" />
+            <CheckBox fx:id="musicCheckBox" focusTraversable="false" mnemonicParsing="false" onAction="#onMusicCheckboxClicked" selected="true" text="Music" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
 </BorderPane>
