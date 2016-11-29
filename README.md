@@ -12,7 +12,7 @@ Application's UI during gameplay:
 
 Controls: 
 * :arrow_left: hit or hold for the brick to move left
-* :arrow_right: hit or hold for the brick to move left
+* :arrow_right: hit or hold for the brick to move right
 * :arrow_down: speeds up the brick's down movement
 * :arrow_up: or `spacebar` rotates the brick counterclockwise.
 
