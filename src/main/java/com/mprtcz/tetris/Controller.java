@@ -30,13 +30,9 @@ public class Controller {
 
         if (gameAgent != null) {
             buttonState = buttonText.START_GAME;
-
             startButton.setText(buttonState.getText());
-
             gameAgent.terminateGame();
-
             gameAgent = null;
-
             Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
             for (Thread t : threadSet) {
                 if (t.getName().equals("GameThread")) {
@@ -49,12 +45,9 @@ public class Controller {
             }
         } else {
             buttonState = buttonText.STOP_GAME;
-
             startButton.setText(buttonState.getText());
-
             gameAgent = new GameAgent(gameCanvas, nextBrickCanvas, pointsTextField);
             gameAgent.setMusic(musicCheckBox.isSelected());
-
             Thread thread = new Thread(this::playGameAgent);
             thread.setName("GameThread");
             thread.start();
@@ -73,7 +66,6 @@ public class Controller {
 
     public void initialize() {
         startButton.setOnKeyReleased(event -> gameAgent.handleKeyReleasedEvents(event));
-
         startButton.setOnKeyPressed(event -> gameAgent.handleKeyPressedEvents(event));
     }
 

@@ -7,14 +7,10 @@ import com.mprtcz.tetris.listoperators.ListOperator;
 import com.mprtcz.tetris.logger.TetrisGameLogger;
 import com.mprtcz.tetris.music.Player;
 import javafx.application.Platform;
-import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -68,44 +64,31 @@ class GameAgent {
 
         canvasDrawer = new CanvasDrawer(canvas);
         listOperator = new ListOperator(canvasDrawer.getNumberOfColumns(), canvasDrawer.getNumberOfBasicSquares());
-
         initializeNextShape();
-
         gameRunning = true;
-
         while (gameRunning) {
             shape = Shape.getInstance(nextShapeType, canvasDrawer.getNumberOfColumns(),
                     canvasDrawer.getNumberOfBasicSquares(), listOperator.getSavedIndexes());
-
             if (nextShapeToDraw != null) {
                 shape.setColor(nextShapeToDraw.getColor());
             }
-
             pickAndDrawNextShape();
-
             gameRunning = listOperator.canShapeBeAddedToGame(shape);
-
             sleepingTime = SLEEPING_TIME;
             while (shape.pullShapeIndexesDown() && gameRunning) {
-
                 drawOnCanvasDrawer();
-
                 try {
                     Thread.sleep(sleepingTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-
             listOperator.addIndexesToList(shape);
             shape = null;
             points = listOperator.removeFullRowsFromSavedIndexes(points);
-
             Platform.runLater(() -> pointsTextField.setText(String.valueOf(points)));
-
             drawOnCanvasDrawer();
         }
-
         player.stopMusic();
         Platform.runLater(() -> canvasDrawer.drawEndScreen(String.valueOf(points)));
     }
@@ -129,21 +112,22 @@ class GameAgent {
 
     void handleKeyReleasedEvents(KeyEvent event) {
         logger.log(level, "event = [" + event + "]");
+        isMoveLoopRunning = false;
         if (shape != null) {
-            if (event.getCode() == KeyCode.UP) {
-                shape.rotateShape();
-            } else if (event.getCode() == KeyCode.LEFT) {
-                shape.moveLeft();
-            } else if (event.getCode() == KeyCode.RIGHT) {
-                shape.moveRight();
-            } else if (event.getCode() == KeyCode.DOWN) {
+            if (event.getCode() == KeyCode.DOWN) {
                 sleepingTime = SLEEPING_TIME;
+            } else if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.SPACE) {
+                shape.rotateShape();
+                event.consume();
             }
-            canvasDrawer.drawListOfIndexes(listOperator.getIndexesToDraw(shape));
+            drawOnCanvasDrawer();
         }
     }
 
     void handleKeyPressedEvents(KeyEvent event) {
+        if (shape != null) {
+            moveLoop(event);
+        }
         if (event.getCode() == KeyCode.DOWN) {
             sleepingTime = SLEEPING_TIME / 10;
         }
@@ -166,21 +150,18 @@ class GameAgent {
         }
     }
 
-    private void displayEndScreen() {
-        logger.log(level, "End screen");
+    private boolean isMoveLoopRunning = false;
 
-        final double canvasMiddleWidth = Math.round(canvas.getWidth() / 2);
-        final double canvasMiddleHeight = Math.round(canvas.getHeight() / 2);
-
-        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        graphicsContext.setTextAlign(TextAlignment.CENTER);
-        graphicsContext.setTextBaseline(VPos.CENTER);
-
-        String endMessageString = "Game over! Your score: " +
-                points +
-                "\n Hit START to try again";
-
-        graphicsContext.setFill(Color.BLACK);
-        graphicsContext.fillText(endMessageString, canvasMiddleWidth, canvasMiddleHeight);
+    private void moveLoop(KeyEvent event) {
+        boolean runLoop = true;
+        while (runLoop) {
+            if (event.getCode() == KeyCode.LEFT) {
+                shape.moveLeft();
+            } else if (event.getCode() == KeyCode.RIGHT) {
+                shape.moveRight();
+            }
+            drawOnCanvasDrawer();
+            runLoop = this.isMoveLoopRunning;
+        }
     }
 }
