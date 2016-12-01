@@ -1,7 +1,7 @@
 # Tetris
 
 A Java application implementing popular [Tetris](https://en.wikipedia.org/wiki/Tetris) game.
-The Game starts after pressing START Button at the bottom of the screen.Next to it, there is a checkbox which allows the application to play music during gameplay.
+The Game starts after pressing `START` Button at the bottom of the screen. Next to it, there is a checkbox which allows the application to play music during gameplay.
 
 The music's source: [Tetris Meets Metal - Youtube](https://www.youtube.com/watch?v=lGkyL_MF-lw)
 
@@ -10,7 +10,7 @@ Application's UI during gameplay:
 ![sampleOutput](https://sc-cdn.scaleengine.net/i/09c9f4168840a2951ee92990b65a2d66.png)
 
 
-Controls: 
+**Controls**: 
 * :arrow_left: hit or hold for the brick to move left
 * :arrow_right: hit or hold for the brick to move right
 * :arrow_down: speeds up the brick's down movement
