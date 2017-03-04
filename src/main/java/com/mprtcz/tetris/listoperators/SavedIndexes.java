@@ -4,14 +4,18 @@ import com.mprtcz.tetris.abstractshapes.Shape;
 import com.mprtcz.tetris.logger.TetrisGameLogger;
 import javafx.scene.paint.Color;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Created by Azet on 2016-05-08.
  */
-public class ListOperator {
+public class SavedIndexes {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
 
@@ -19,7 +23,7 @@ public class ListOperator {
     private int maxIndex;
     private int numberOfColumns;
 
-    public ListOperator(int numberOfColumns, int maxIndex) {
+    public SavedIndexes(int numberOfColumns, int maxIndex) {
         this.savedIndexes = new HashMap<>();
         this.maxIndex = maxIndex;
         this.numberOfColumns = numberOfColumns;
@@ -34,7 +38,7 @@ public class ListOperator {
     }
 
     public Map<Integer, Color> getIndexesToDraw(Shape shape) {
-        Map<Integer, Color> toDrawList = new HashMap<>();
+        Map<Integer, Color> toDrawList = new ConcurrentHashMap<>();
         for (Map.Entry<Integer, Color> i : savedIndexes.entrySet()) {
             toDrawList.put(i.getKey(), i.getValue());
         }
@@ -56,7 +60,7 @@ public class ListOperator {
         return toDrawList;
     }
 
-    public void addIndexesToList(Shape shape) {
+    public void saveFallenShape(Shape shape) {
         for (Integer i : shape.getShapeCoordinates()) {
             if (!savedIndexes.containsKey(i)) {
                 savedIndexes.put(i, shape.getColor());
@@ -64,18 +68,18 @@ public class ListOperator {
         }
     }
 
-    public int removeFullRowsFromSavedIndexes(int points) {
+    public int removeFullRowsFromSavedIndexes(int score) {
         ConditionsChecker conditionsChecker = new ConditionsChecker(savedIndexes, maxIndex);
         List<Integer> rowsToRemove = conditionsChecker.getIndexesOfFullRows(numberOfColumns);
         List<Integer> indexesToRemove = getIndexesFromRowsToRemove(rowsToRemove);
         if (rowsToRemove.size() > 0) {
-            points += rowsToRemove.size() * 10;
+            score += rowsToRemove.size() * 10;
             for (Integer i : indexesToRemove) {
                 savedIndexes.remove(i);
             }
             pullRemainingBricksDown(rowsToRemove);
         }
-        return points;
+        return score;
     }
 
     private List<Integer> getIndexesFromRowsToRemove(List<Integer> rows) {
@@ -111,5 +115,4 @@ public class ListOperator {
         }
         return true;
     }
-
 }

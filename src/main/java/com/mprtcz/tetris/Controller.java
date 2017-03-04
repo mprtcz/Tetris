@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 public class Controller {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
+    private static final String GAME_THREAD_NAME = "GameThread";
 
     public Canvas gameCanvas;
     public Button startButton;
@@ -26,37 +27,61 @@ public class Controller {
     private GameAgent gameAgent;
 
     public void onStartButtonClicked() {
-        buttonText buttonState;
-
         if (gameAgent != null) {
-            buttonState = buttonText.START_GAME;
-            startButton.setText(buttonState.getText());
-            gameAgent.terminateGame();
-            gameAgent = null;
-            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-            for (Thread t : threadSet) {
-                if (t.getName().equals("GameThread")) {
-                    try {
-                        t.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            stopExistingGame();
         } else {
-            buttonState = buttonText.STOP_GAME;
-            startButton.setText(buttonState.getText());
-            gameAgent = new GameAgent(gameCanvas, nextBrickCanvas, pointsTextField);
-            gameAgent.setMusic(musicCheckBox.isSelected());
-            Thread thread = new Thread(this::playGameAgent);
-            thread.setName("GameThread");
-            thread.start();
+            startNewGame();
         }
+    }
+
+    private void stopExistingGame() {
+        setStartButtonText(ButtonText.START_GAME);
+        nullifyAndTerminateGame();
+        joinGameThread();
+    }
+
+    private void startNewGame() {
+        setStartButtonText(ButtonText.STOP_GAME);
+        initializeNewGameAgent();
+        fireUpGameThread();
+    }
+
+    private void fireUpGameThread() {
+        Thread thread = new Thread(this::playGameAgent);
+        thread.setName(GAME_THREAD_NAME);
+        thread.start();
+    }
+
+    private void nullifyAndTerminateGame() {
+        gameAgent.terminateGame();
+        gameAgent = null;
+    }
+
+    private void joinGameThread() {
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        threadSet.stream().filter(t -> t.getName().equals(GAME_THREAD_NAME)).forEach(this::joinThread);
+    }
+
+    private void joinThread(Thread thread) {
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initializeNewGameAgent() {
+        gameAgent = new GameAgent(gameCanvas, nextBrickCanvas, pointsTextField);
+        gameAgent.playMusic(musicCheckBox.isSelected());
+    }
+
+    private void setStartButtonText(ButtonText buttonState) {
+        startButton.setText(buttonState.getText());
     }
 
     public void onMusicCheckboxClicked() {
         if (gameAgent != null) {
-            gameAgent.setMusic(musicCheckBox.isSelected());
+            gameAgent.playMusic(musicCheckBox.isSelected());
         }
     }
 
@@ -69,13 +94,13 @@ public class Controller {
         startButton.setOnKeyPressed(event -> gameAgent.handleKeyPressedEvents(event));
     }
 
-    private enum buttonText {
+    private enum ButtonText {
         STOP_GAME("Stop Game"),
         START_GAME("START");
 
         private String text;
 
-        buttonText(String text) {
+        ButtonText(String text) {
             this.text = text;
         }
 

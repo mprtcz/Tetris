@@ -46,7 +46,7 @@ public abstract class Shape {
         }
     }
 
-    public static Shape getInstance(ShapeType shapeType, int numberOfColumns, int maxListIndex, Map<Integer, Color> savedIndexes) {
+    public static Shape shapeFactory(ShapeType shapeType, int numberOfColumns, int maxListIndex, Map<Integer, Color> savedIndexes) {
         switch (shapeType) {
             case I_shape:
                 return new IShape(numberOfColumns, maxListIndex, savedIndexes);

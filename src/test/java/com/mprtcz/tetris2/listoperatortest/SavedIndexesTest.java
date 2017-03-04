@@ -1,6 +1,6 @@
 package com.mprtcz.tetris2.listoperatortest;
 
-import com.mprtcz.tetris.listoperators.ListOperator;
+import com.mprtcz.tetris.listoperators.SavedIndexes;
 import javafx.scene.paint.Color;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Azet on 2016-06-01.
  */
-public class ListOperatorTest {
+public class SavedIndexesTest {
     int maxIndex = 19;
     int numberOfColumns = 4;
     int points = 0;
@@ -28,14 +28,14 @@ public class ListOperatorTest {
 
     @Test
     public void removeFullRowsFromSavedIndexesTest(){
-        ListOperator listOperator = new ListOperator(numberOfColumns, maxIndex);
-        listOperator.setSavedIndexes(savedIndexes);
-        listOperator.removeFullRowsFromSavedIndexes(points);
+        SavedIndexes savedIndexes = new SavedIndexes(numberOfColumns, maxIndex);
+        savedIndexes.setSavedIndexes(this.savedIndexes);
+        savedIndexes.removeFullRowsFromSavedIndexes(points);
 
-        assertTrue(savedIndexes.containsKey(15));
+        assertTrue(this.savedIndexes.containsKey(15));
 
-        assertTrue(savedIndexes.containsKey(1));
+        assertTrue(this.savedIndexes.containsKey(1));
 
-        assertEquals(savedIndexes.size(), 2);
+        assertEquals(this.savedIndexes.size(), 2);
     }
 }

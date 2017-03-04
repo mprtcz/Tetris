@@ -18,17 +18,23 @@ public class NextShapeCanvasDrawer extends CanvasDrawer {
     }
 
     @Override
-    public void drawListOfIndexes(Map<Integer, Color> map){
+    public void drawIndexesOnGraphicContext(Map<Integer, Color> indexesToDraw){
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        int width = super.getBasicSquareSize() * super.getNumberOfColumns();
-        int height = super.getBasicSquareSize() * (super.getNumberOfBasicSquares()/super.getNumberOfColumns());
-        graphicsContext.clearRect(0, 0, graphicsContext.getCanvas().getWidth(), graphicsContext.getCanvas().getHeight());
-        graphicsContext.setStroke(Color.BLACK);
-        graphicsContext.strokeRect(0, 0, width,
-                height);
-        for(Map.Entry<Integer, Color> entry : map.entrySet()){
-            graphicsContext.setFill(entry.getValue());
-            graphicsContext.fillRoundRect(super.getXCoordinate(entry.getKey()), super.getYCoordinate(entry.getKey()), super.getBasicSquareSize(), super.getBasicSquareSize(), 10, 10);
+        initializeGraphicsContext(graphicsContext);
+        for(Map.Entry<Integer, Color> entry : indexesToDraw.entrySet()){
+            drawRoundColoredRectangle(graphicsContext, entry);
         }
+    }
+
+    private void initializeGraphicsContext(GraphicsContext graphicsContext) {
+        graphicsContext.clearRect(0, 0, graphicsContext.getCanvas().getWidth(), graphicsContext.getCanvas().getHeight());
+        drawFrame(graphicsContext);
+    }
+
+    private void drawFrame(GraphicsContext graphicsContext) {
+        int frameWidth = super.getBasicSquareSize() * super.getNumberOfColumns();
+        int frameHeight = super.getBasicSquareSize() * (super.getNumberOfBasicSquares()/super.getNumberOfColumns());
+        graphicsContext.setStroke(Color.RED);
+        graphicsContext.strokeRect(0, 0, frameWidth, frameHeight);
     }
 }

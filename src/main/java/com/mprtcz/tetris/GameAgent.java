@@ -3,7 +3,7 @@ package com.mprtcz.tetris;
 import com.mprtcz.tetris.abstractshapes.Shape;
 import com.mprtcz.tetris.drawers.CanvasDrawer;
 import com.mprtcz.tetris.drawers.NextShapeCanvasDrawer;
-import com.mprtcz.tetris.listoperators.ListOperator;
+import com.mprtcz.tetris.listoperators.SavedIndexes;
 import com.mprtcz.tetris.logger.TetrisGameLogger;
 import com.mprtcz.tetris.music.Player;
 import javafx.application.Platform;
@@ -24,11 +24,11 @@ class GameAgent {
     private Level level = Level.CONFIG;
 
     private CanvasDrawer canvasDrawer;
-    private ListOperator listOperator;
+    private SavedIndexes savedIndexes;
     private Canvas canvas;
 
     private NextShapeCanvasDrawer nextShapeCanvasDrawer;
-    private ListOperator nextShapeListOperator;
+    private SavedIndexes nextShapeSavedIndexes;
 
     private Canvas nextBrickCanvas;
     private Shape shape;
@@ -38,7 +38,7 @@ class GameAgent {
 
     private final int SLEEPING_TIME = 300;
     private TextField pointsTextField;
-    private int points;
+    private int score;
 
     private Player player;
     private boolean playMusic = false;
@@ -53,7 +53,7 @@ class GameAgent {
         this.canvas = gameCanvas;
         this.nextBrickCanvas = nextBrickCanvas;
         this.pointsTextField = pointsTextField;
-        this.points = 0;
+        this.score = 0;
         this.player = new Player();
     }
 
@@ -63,51 +63,71 @@ class GameAgent {
         }
 
         canvasDrawer = new CanvasDrawer(canvas);
-        listOperator = new ListOperator(canvasDrawer.getNumberOfColumns(), canvasDrawer.getNumberOfBasicSquares());
+        savedIndexes = new SavedIndexes(canvasDrawer.getNumberOfColumns(), canvasDrawer.getNumberOfBasicSquares());
         initializeNextShape();
-        gameRunning = true;
-        while (gameRunning) {
-            shape = Shape.getInstance(nextShapeType, canvasDrawer.getNumberOfColumns(),
-                    canvasDrawer.getNumberOfBasicSquares(), listOperator.getSavedIndexes());
-            if (nextShapeToDraw != null) {
-                shape.setColor(nextShapeToDraw.getColor());
-            }
+        do {
+            getNewShapeAndApplyColor();
             pickAndDrawNextShape();
-            gameRunning = listOperator.canShapeBeAddedToGame(shape);
+            gameRunning = savedIndexes.canShapeBeAddedToGame(shape);
             sleepingTime = SLEEPING_TIME;
-            while (shape.pullShapeIndexesDown() && gameRunning) {
-                drawOnCanvasDrawer();
-                try {
-                    Thread.sleep(sleepingTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            listOperator.addIndexesToList(shape);
-            shape = null;
-            points = listOperator.removeFullRowsFromSavedIndexes(points);
-            Platform.runLater(() -> pointsTextField.setText(String.valueOf(points)));
+            firePullShapeDownLoop();
+            calculateAndDisplayScore();
             drawOnCanvasDrawer();
-        }
+        } while (gameRunning);
+
         player.stopMusic();
-        Platform.runLater(() -> canvasDrawer.drawEndScreen(String.valueOf(points)));
+        Platform.runLater(() -> canvasDrawer.drawEndScreen(String.valueOf(score)));
+    }
+
+    private void getNewShapeAndApplyColor() {
+        shape = Shape.shapeFactory(nextShapeType, canvasDrawer.getNumberOfColumns(),
+                canvasDrawer.getNumberOfBasicSquares(), savedIndexes.getSavedIndexes());
+        if (nextShapeToDraw != null) {
+            shape.setColor(nextShapeToDraw.getColor());
+        }
+    }
+
+    private void firePullShapeDownLoop() {
+        while (shape.pullShapeIndexesDown() && gameRunning) {
+            drawOnCanvasDrawer();
+            putThreadToSleep();
+        }
+        addShapeToListAndNullify();
+    }
+
+    private void calculateAndDisplayScore() {
+        score = savedIndexes.removeFullRowsFromSavedIndexes(score);
+        Platform.runLater(() -> pointsTextField.setText(String.valueOf(score)));
+    }
+
+    private void addShapeToListAndNullify() {
+        savedIndexes.saveFallenShape(shape);
+        shape = null;
+    }
+
+    private void putThreadToSleep() {
+        try {
+            Thread.sleep(sleepingTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void drawOnCanvasDrawer() {
-        Platform.runLater(() -> canvasDrawer.drawListOfIndexes(listOperator.getIndexesToDraw(shape)));
+        Platform.runLater(() -> canvasDrawer.drawIndexesOnGraphicContext(savedIndexes.getIndexesToDraw(shape)));
     }
 
     private void initializeNextShape() {
         nextShapeType = Shape.ShapeType.randomShapeType();
         nextShapeCanvasDrawer = new NextShapeCanvasDrawer(nextBrickCanvas);
-        nextShapeListOperator = new ListOperator(6, 17);
+        nextShapeSavedIndexes = new SavedIndexes(6, 17);
     }
 
     private void pickAndDrawNextShape() {
         nextShapeType = Shape.ShapeType.randomShapeType();
-        nextShapeToDraw = Shape.getInstance(nextShapeType, 6, 17, new HashMap<>());
+        nextShapeToDraw = Shape.shapeFactory(nextShapeType, 6, 17, new HashMap<>());
 
-        Platform.runLater(() -> nextShapeCanvasDrawer.drawListOfIndexes(nextShapeListOperator.drawShape(nextShapeToDraw)));
+        Platform.runLater(() -> nextShapeCanvasDrawer.drawIndexesOnGraphicContext(nextShapeSavedIndexes.drawShape(nextShapeToDraw)));
     }
 
     void handleKeyReleasedEvents(KeyEvent event) {
@@ -141,7 +161,7 @@ class GameAgent {
         Platform.runLater(() -> pointsTextField.setText("0"));
     }
 
-    void setMusic(boolean value) {
+    void playMusic(boolean value) {
         logger.log(level, "value = [" + value + "]");
         if (!value) {
             player.stopMusic();
