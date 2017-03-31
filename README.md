@@ -7,13 +7,13 @@ The music's source: [Tetris Meets Metal - Youtube](https://www.youtube.com/watch
 
 Application's UI during gameplay:
 
-![sampleOutput](https://sc-cdn.scaleengine.net/i/09c9f4168840a2951ee92990b65a2d66.png)
+![sampleOutput](https://sc-cdn.scaleengine.net/i/ea02b73c247710e9e221644415309730.png)
 
 
 **Controls**: 
 * :arrow_left: hit or hold for the brick to move left
 * :arrow_right: hit or hold for the brick to move right
-* :arrow_down: speeds up the brick's down movement
+* :arrow_down: holding speeds up the brick's down movement
 * :arrow_up: or `spacebar` rotates the brick counterclockwise.
 
 
@@ -25,7 +25,7 @@ In the right side of the window the application displays actual points a player 
 
 The application's sample game:
 
-![sampleOutput](http://i.giphy.com/3o6ZtivxJgmGtPEAM0.gif)
+![tetris-gameplay](https://media.giphy.com/media/3o7bubkTFp3z80mbOE/giphy.gif)
 
 ---
 
