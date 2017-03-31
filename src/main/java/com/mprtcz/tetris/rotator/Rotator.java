@@ -23,7 +23,6 @@ public class Rotator {
         this.shape = shape;
     }
 
-
     private class Point {
         private int x;
         private int y;
@@ -33,7 +32,6 @@ public class Rotator {
             y = index / numberOfColumns;
         }
     }
-
 
     private int rotateIndexAroundPivotPoint(int index, int degree, int pivotPointIndex) {
         logger.log(level, "index = [" + index + "], degree = [" + degree + "], pivotPointIndex = [" + pivotPointIndex + "]");
