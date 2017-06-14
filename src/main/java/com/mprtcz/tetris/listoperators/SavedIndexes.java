@@ -68,20 +68,6 @@ public class SavedIndexes {
         }
     }
 
-    public int removeFullRowsFromSavedIndexes(int score) {
-        ConditionsChecker conditionsChecker = new ConditionsChecker(savedIndexes, maxIndex);
-        List<Integer> rowsToRemove = conditionsChecker.getIndexesOfFullRows(numberOfColumns);
-        List<Integer> indexesToRemove = getIndexesFromRowsToRemove(rowsToRemove);
-        if (rowsToRemove.size() > 0) {
-            score += rowsToRemove.size() * 10;
-            for (Integer i : indexesToRemove) {
-                savedIndexes.remove(i);
-            }
-            pullRemainingBricksDown(rowsToRemove);
-        }
-        return score;
-    }
-
     private List<Integer> getIndexesFromRowsToRemove(List<Integer> rows) {
         List<Integer> indexesToRemove = new ArrayList<>();
         for (Integer row : rows) {
@@ -114,5 +100,31 @@ public class SavedIndexes {
             }
         }
         return true;
+    }
+
+    public List<Integer> getAndMarkRowsToBeRemoved() {
+        ConditionsChecker conditionsChecker = new ConditionsChecker(savedIndexes, maxIndex);
+        List<Integer> rowsToRemove = conditionsChecker.getIndexesOfFullRows(numberOfColumns);
+        List<Integer> indexesToRemove = getIndexesFromRowsToRemove(rowsToRemove);
+        if (rowsToRemove.size() > 0) {
+            indexesToRemove.forEach(this::colorIndexAsRed);
+        }
+        return rowsToRemove;
+    }
+
+    public int removeListedRowsAndAddScore(List<Integer> rowsToRemove, int score) {
+        List<Integer> indexesToRemove = getIndexesFromRowsToRemove(rowsToRemove);
+        if (rowsToRemove.size() > 0) {
+            score += rowsToRemove.size() * 10;
+            for (Integer i : indexesToRemove) {
+                savedIndexes.remove(i);
+            }
+            pullRemainingBricksDown(rowsToRemove);
+        }
+        return score;
+    }
+
+    private void colorIndexAsRed(Integer i) {
+        savedIndexes.put(i, Color.RED);
     }
 }

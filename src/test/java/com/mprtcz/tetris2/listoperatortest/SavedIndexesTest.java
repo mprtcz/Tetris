@@ -1,14 +1,9 @@
 package com.mprtcz.tetris2.listoperatortest;
 
-import com.mprtcz.tetris.listoperators.SavedIndexes;
 import javafx.scene.paint.Color;
-import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Azet on 2016-06-01.
@@ -25,17 +20,4 @@ public class SavedIndexesTest {
         }
     }
 
-
-    @Test
-    public void removeFullRowsFromSavedIndexesTest(){
-        SavedIndexes savedIndexes = new SavedIndexes(numberOfColumns, maxIndex);
-        savedIndexes.setSavedIndexes(this.savedIndexes);
-        savedIndexes.removeFullRowsFromSavedIndexes(points);
-
-        assertTrue(this.savedIndexes.containsKey(15));
-
-        assertTrue(this.savedIndexes.containsKey(1));
-
-        assertEquals(this.savedIndexes.size(), 2);
-    }
 }

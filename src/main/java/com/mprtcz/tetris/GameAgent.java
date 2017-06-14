@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,7 +97,10 @@ class GameAgent {
     }
 
     private void calculateAndDisplayScore() {
-        score = savedIndexes.removeFullRowsFromSavedIndexes(score);
+        List<Integer> rowsToBeRemoved = savedIndexes.getAndMarkRowsToBeRemoved();
+        drawOnCanvasDrawer();
+        putThreadToSleep();
+        score = savedIndexes.removeListedRowsAndAddScore(rowsToBeRemoved, score);
         Platform.runLater(() -> pointsTextField.setText(String.valueOf(score)));
     }
 
