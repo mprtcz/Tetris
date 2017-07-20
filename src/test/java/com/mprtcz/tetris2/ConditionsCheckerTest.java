@@ -12,8 +12,8 @@ import static org.junit.Assert.assertTrue;
  * Created by Azet on 2016-05-17.
  */
 public class ConditionsCheckerTest {
-    private Integer[] array = new Integer[]{0,1,2,3,6,8,9,10,11,13,14};
-    private Integer[] rowsResultArray = new Integer[]{0,2};
+    private Integer[] array = new Integer[]{};
+    private Integer[] rowsResultArray = new Integer[]{0};
     Integer[] indexesToRemoveArray = new Integer[]{0,1,2,3,10,11,13,14};
     private List<Integer> rowsResultList = new ArrayList<>(Arrays.asList(rowsResultArray));
     private Map<Integer, Color> savedIndexes = new HashMap<>();

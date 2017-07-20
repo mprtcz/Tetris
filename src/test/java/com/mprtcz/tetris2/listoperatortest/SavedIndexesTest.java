@@ -10,12 +10,12 @@ import java.util.Map;
  */
 public class SavedIndexesTest {
     int maxIndex = 19;
-    int numberOfColumns = 4;
+    int numberOfColumns = 17;
     int points = 0;
     Integer[] array = new Integer[]{19,18,17,16,15, 1};
     Map<Integer, Color> savedIndexes = new HashMap<>();
     {
-        for(Integer i : array){
+        for(Integer  : array){
             savedIndexes.put(i, Color.ALICEBLUE);
         }
     }
