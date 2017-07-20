@@ -15,7 +15,7 @@ public class SavedIndexesTest {
     Integer[] array = new Integer[]{19,18,17,16,15, 1};
     Map<Integer, Color> savedIndexes = new HashMap<>();
     {
-        for(Integer  : array){
+        for(Integer i : array){
             savedIndexes.put(i, Color.ALICEBLUE);
         }
     }
