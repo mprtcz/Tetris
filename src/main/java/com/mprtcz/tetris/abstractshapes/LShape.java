@@ -17,11 +17,10 @@ public class LShape extends Shape {
 
     private int numberOfColumns;
 
-    public LShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes){
+    public LShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes) {
         super(maxArrayIndex, numberOfColumns, savedIndexes);
         this.numberOfColumns = numberOfColumns;
     }
-
 
     @Override
     public int[] getBasicCoordinates(int destinationIndex) {
@@ -32,8 +31,9 @@ public class LShape extends Shape {
         basicCoords[3] = destinationIndex + (2 * numberOfColumns) + 1;
         return basicCoords;
     }
+
     @Override
-    public ShapeType getShapeType(){
+    public ShapeType getShapeType() {
         return ShapeType.L_shape;
     }
 }

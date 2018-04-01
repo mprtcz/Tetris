@@ -16,7 +16,7 @@ public class SShape extends Shape {
 
     private int numberOfColumns;
 
-    public SShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes){
+    public SShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes) {
         super(maxArrayIndex, numberOfColumns, savedIndexes);
         this.numberOfColumns = numberOfColumns;
     }
@@ -27,13 +27,12 @@ public class SShape extends Shape {
         basicCoords[0] = destinationIndex;
         basicCoords[1] = destinationIndex + numberOfColumns;
         basicCoords[2] = destinationIndex + numberOfColumns - 1;
-        basicCoords[3] = destinationIndex + 2*numberOfColumns - 1;
+        basicCoords[3] = destinationIndex + 2 * numberOfColumns - 1;
         return basicCoords;
-        //TODO fix sShape
     }
 
     @Override
-    public ShapeType getShapeType(){
+    public ShapeType getShapeType() {
         return ShapeType.S_shape;
     }
 }

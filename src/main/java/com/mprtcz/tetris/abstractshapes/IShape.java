@@ -15,20 +15,6 @@ public class IShape extends Shape {
     private Level level = Level.CONFIG;
 
     private int numberOfColumns;
-/*
-    public IShape(int numberOfColumns, int maxArrayIndex) {
-        int initialCoordinate = numberOfColumns / 2;
-        super.setInitialCoordinate(initialCoordinate);
-        logger.log(level, "initialCoordinate " + initialCoordinate);
-
-        super.setMaxListIndex(maxArrayIndex);
-
-        Orientation orientation = Orientation.BASIC;
-        super.setOrientation(orientation);
-
-        this.numberOfColumns = numberOfColumns;
-        super.setNumberOfColumns(numberOfColumns);
-    }//*/
 
     public IShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes) {
         super(maxArrayIndex, numberOfColumns, savedIndexes);

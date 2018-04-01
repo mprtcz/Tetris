@@ -133,7 +133,7 @@ public abstract class Shape {
     }
 
     private int[] getCoordinates() {
-        return getCoordinatesForIndex(initialCoordinate);
+        return  getCoordinatesForIndex(initialCoordinate);
     }
 
     public int[] getNextOrientationCoordinates() {
@@ -217,8 +217,8 @@ public abstract class Shape {
         this.color = color;
     }
 
-    private Color getRandomColor(){
-        String[] mColors = {
+    private Color getRandomColor() {
+        String[] materialColors = {
                 "#39add1", // light blue
                 "#3079ab", // dark blue
                 "#c25975", // mauve
@@ -233,11 +233,8 @@ public abstract class Shape {
                 "#f092b0", // pink
                 "#b7c0c7"  // light gray
         };
-        Random randomGenerator = new Random();
-        int randomNumber = randomGenerator.nextInt(mColors.length);
-
-        String color = mColors[randomNumber];
-
+        int randomNumber = new Random().nextInt(materialColors.length);
+        String color = materialColors[randomNumber];
         return Color.web(color);
     }
 }

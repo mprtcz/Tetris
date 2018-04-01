@@ -16,7 +16,7 @@ public class TShape extends Shape {
 
     private int numberOfColumns;
 
-    public TShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes){
+    public TShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes) {
         super(maxArrayIndex, numberOfColumns, savedIndexes);
         this.numberOfColumns = numberOfColumns;
     }
@@ -30,8 +30,9 @@ public class TShape extends Shape {
         basicCoords[3] = destinationIndex + numberOfColumns + 1;
         return basicCoords;
     }
+
     @Override
-    public ShapeType getShapeType(){
+    public ShapeType getShapeType() {
         return ShapeType.T_shape;
     }
 }

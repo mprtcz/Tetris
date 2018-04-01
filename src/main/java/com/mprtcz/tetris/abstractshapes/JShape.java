@@ -10,13 +10,13 @@ import java.util.logging.Logger;
 /**
  * Created by Azet on 2016-05-25.
  */
-public class JShape extends Shape{
+public class JShape extends Shape {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
 
     private int numberOfColumns;
 
-    public JShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes){
+    public JShape(int numberOfColumns, int maxArrayIndex, Map<Integer, Color> savedIndexes) {
         super(maxArrayIndex, numberOfColumns, savedIndexes);
         this.numberOfColumns = numberOfColumns;
     }
@@ -33,7 +33,7 @@ public class JShape extends Shape{
     }
 
     @Override
-    public ShapeType getShapeType(){
+    public ShapeType getShapeType() {
         return ShapeType.J_shape;
     }
 }
