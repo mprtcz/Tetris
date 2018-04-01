@@ -9,10 +9,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
-/**
- * Created by Azet on 2016-05-10.
- */
 public class ConditionsChecker {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
@@ -61,10 +59,10 @@ public class ConditionsChecker {
     }
 
     private boolean checkIfIndexFulfillsTheRequirement(
-            int[] indexes, Predicate<Integer> p, Consumer<Integer> messageToLog) {
+            int[] indexes, Predicate<Integer> p, Consumer<Integer> messageLogger) {
         return Arrays.stream(indexes).filter(value -> {
             if(p.test(value)) {
-                messageToLog.accept(value);
+                messageLogger.accept(value);
                 return true;
             }
             return false;
@@ -132,21 +130,25 @@ public class ConditionsChecker {
 
     private boolean checkRightBorderConditions(Shape shape) {
         logger.log(level, "Checking rotating conditions for shape: " + shape.toString());
+        if (numberOfColumns == 0) {
+            logger.log(level, "Right Border Condition false, number of columns is 0");
+            return false;
+        }
+
         int[] initialCoordinates = shape.getShapeCoordinates();
         int[] targetCoordinates = shape.getNextOrientationCoordinates();
 
-        if (numberOfColumns != 0) {
-            for (int i = 0; i < initialCoordinates.length; i++) {
-                if ((initialCoordinates[i] % numberOfColumns) > (targetCoordinates[i] % numberOfColumns)) {
-                    logger.log(level, "Right Border Condition false");
-                    return false;
-                }
-            }
+        boolean rightBorderCondition = IntStream.range(0, initialCoordinates.length).filter(
+                index -> (initialCoordinates[index] % numberOfColumns) > (targetCoordinates[index] % numberOfColumns))
+                .findAny().isPresent();
+
+        if(rightBorderCondition) {
+            logger.log(level, "Right Border Condition false");
+            return false;
+        } else {
             logger.log(level, "Right Border Condition True");
             return true;
         }
-        logger.log(level, "Right Border Condition false");
-        return false;
     }
 
     public boolean checkAllMovingConditions(int[] indexes) {
@@ -177,22 +179,9 @@ public class ConditionsChecker {
     }
 
     private boolean checkIfRowIsFull(int row) {
-        for (int i = 0; i < numberOfColumns; i++) {
-            Integer index = row * numberOfColumns + i;
-            if (!savedIndexesList.containsKey(index)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean checkIfRowIsEmpty(int row) {
-        for (int i = 0; i < numberOfColumns; i++) {
-            Integer index = row * numberOfColumns + i;
-            if (savedIndexesList.containsKey(index)) {
-                return false;
-            }
-        }
-        return true;
+        return !IntStream.range(0, numberOfColumns).filter(value -> {
+            Integer index = row * numberOfColumns + value;
+            return !savedIndexesList.containsKey(index);
+        }).findFirst().isPresent();
     }
 }
