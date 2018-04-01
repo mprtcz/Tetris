@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ConditionsChecker {
@@ -166,14 +167,13 @@ public class ConditionsChecker {
 
     public List<Integer> getIndexesOfFullRows(int numberOfColumns) {
         this.numberOfColumns = numberOfColumns;
-        List<Integer> indexesOfFullRows = new ArrayList<>();
         int numberOfRows = (maxIndex + 1) / this.numberOfColumns;
 
-        for (int row = 0; row < numberOfRows; row++) {
-            if (checkIfRowIsFull(row)) {
-                indexesOfFullRows.add(row);
-            }
-        }
+        List<Integer> indexesOfFullRows = IntStream.range(0, numberOfRows)
+                .filter(this::checkIfRowIsFull)
+                .boxed()
+                .collect(Collectors.toList());
+
         logger.log(level, "Full row indexes: " + indexesOfFullRows.toString());
         return indexesOfFullRows;
     }
