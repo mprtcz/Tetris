@@ -4,7 +4,10 @@ import com.mprtcz.tetris.abstractshapes.Shape;
 import com.mprtcz.tetris.logger.TetrisGameLogger;
 import javafx.scene.paint.Color;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -98,9 +101,9 @@ public class ConditionsChecker {
         int[] targetCoordinates = shape.getNextOrientationCoordinates();
 
         if (orientation == Shape.Orientation.BASIC || orientation == Shape.Orientation.DEG270) {
-            borderCondition = checkRightBorderConditions(shape);
+            borderCondition = checkCondition(shape, Border.RIGHT);
         } else if (orientation == Shape.Orientation.DEG90 || orientation == Shape.Orientation.DEG180) {
-            borderCondition = checkLeftBorderConditions(shape);
+            borderCondition = checkCondition(shape, Border.LEFT);
         } else {
             logger.log(level, "Strange orientation! " + orientation.toString());
             borderCondition = true;
@@ -108,48 +111,6 @@ public class ConditionsChecker {
 
         boolean movingConditions = checkAllMovingConditions(targetCoordinates);
         return movingConditions && borderCondition;
-    }
-
-    private boolean checkLeftBorderConditions(Shape shape) {
-        logger.log(level, "Checking rotating conditions for shape: " + shape.toString());
-        int[] initialCoordinates = shape.getShapeCoordinates();
-        int[] targetCoordinates = shape.getNextOrientationCoordinates();
-
-        if (numberOfColumns != 0) {
-            for (int i = 0; i < initialCoordinates.length; i++) {
-                if ((initialCoordinates[i] % numberOfColumns) < (targetCoordinates[i] % numberOfColumns)) {
-                    logger.log(level, "Left Border Condition false");
-                    return false;
-                }
-            }
-            logger.log(level, "Left Border Condition true");
-            return true;
-        }
-        logger.log(level, "Left Border Condition false");
-        return false;
-    }
-
-    private boolean checkRightBorderConditions(Shape shape) {
-        logger.log(level, "Checking rotating conditions for shape: " + shape.toString());
-        if (numberOfColumns == 0) {
-            logger.log(level, "Right Border Condition false, number of columns is 0");
-            return false;
-        }
-
-        int[] initialCoordinates = shape.getShapeCoordinates();
-        int[] targetCoordinates = shape.getNextOrientationCoordinates();
-
-        boolean rightBorderCondition = IntStream.range(0, initialCoordinates.length).filter(
-                index -> (initialCoordinates[index] % numberOfColumns) > (targetCoordinates[index] % numberOfColumns))
-                .findAny().isPresent();
-
-        if(rightBorderCondition) {
-            logger.log(level, "Right Border Condition false");
-            return false;
-        } else {
-            logger.log(level, "Right Border Condition True");
-            return true;
-        }
     }
 
     public boolean checkAllMovingConditions(int[] indexes) {
@@ -183,5 +144,55 @@ public class ConditionsChecker {
             Integer index = row * numberOfColumns + value;
             return !savedIndexesList.containsKey(index);
         }).findFirst().isPresent();
+    }
+
+    private enum Border {
+        LEFT("Left Border") {
+            @Override
+            public boolean testCollision(int[] values, int[] targetValues, int numberOfColumns, int value) {
+                return values[value] % numberOfColumns < targetValues[value] % numberOfColumns;
+            }
+        },
+        RIGHT("Right Border") {
+            @Override
+            public boolean testCollision(int[] values, int[] targetValues, int numberOfColumns, int value) {
+                return values[value] % numberOfColumns > targetValues[value] % numberOfColumns;
+            }
+        };
+
+        private String name;
+
+        public abstract boolean testCollision(int[] values, int[] targetValues, int numberOfColumns, int value);
+
+        public String getName() {
+            return name;
+        }
+
+        Border(String name) {
+            this.name = name;
+        }
+    }
+
+    private boolean checkCondition(Shape shape, Border border) {
+        logger.log(level, "Checking rotating conditions for shape: " + shape.toString());
+        if (numberOfColumns == 0) {
+            logger.log(level, border.getName() +" condition false, number of columns is 0");
+            return false;
+        }
+
+        int[] initialCoordinates = shape.getShapeCoordinates();
+        int[] targetCoordinates = shape.getNextOrientationCoordinates();
+
+        boolean rightBorderCondition = IntStream.range(0, initialCoordinates.length).filter(
+                value -> border.testCollision(initialCoordinates, targetCoordinates, numberOfColumns, value))
+                .findAny().isPresent();
+
+        if(rightBorderCondition) {
+            logger.log(level, border.getName() + " condition false");
+            return false;
+        } else {
+            logger.log(level, border.getName() + " condition true");
+            return true;
+        }
     }
 }
