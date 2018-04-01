@@ -17,9 +17,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by Azet on 2016-05-20.
- */
 class GameAgent {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
@@ -37,7 +34,7 @@ class GameAgent {
     private Shape nextShapeToDraw;
     private int sleepingTime;
 
-    private final int SLEEPING_TIME = 300;
+    private static final int SLEEPING_TIME = 300;
     private TextField pointsTextField;
     private int score;
 
@@ -131,21 +128,24 @@ class GameAgent {
         nextShapeType = Shape.ShapeType.randomShapeType();
         nextShapeToDraw = Shape.shapeFactory(nextShapeType, 6, 17, new HashMap<>());
 
-        Platform.runLater(() -> nextShapeCanvasDrawer.drawIndexesOnGraphicContext(nextShapeSavedIndexes.drawShape(nextShapeToDraw)));
+        Platform.runLater(() ->
+                nextShapeCanvasDrawer.drawIndexesOnGraphicContext(nextShapeSavedIndexes.drawShape(nextShapeToDraw)));
     }
 
     void handleKeyReleasedEvents(KeyEvent event) {
         logger.log(level, "event = [" + event + "]");
         isMoveLoopRunning = false;
-        if (shape != null) {
-            if (event.getCode() == KeyCode.DOWN) {
-                sleepingTime = SLEEPING_TIME;
-            } else if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.SPACE) {
-                shape.rotateShape();
-                event.consume();
-            }
-            drawOnCanvasDrawer();
+        if (shape == null) {
+            return;
         }
+
+        if (event.getCode() == KeyCode.DOWN) {
+            sleepingTime = SLEEPING_TIME;
+        } else if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.SPACE) {
+            shape.rotateShape();
+            event.consume();
+        }
+        drawOnCanvasDrawer();
     }
 
     void handleKeyPressedEvents(KeyEvent event) {

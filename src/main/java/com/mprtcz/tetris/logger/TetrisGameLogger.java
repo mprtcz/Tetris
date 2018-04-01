@@ -6,9 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.*;
 
-/**
- * Created by Azet on 2016-05-05.
- */
 public class TetrisGameLogger {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private static Handler handler = null;
