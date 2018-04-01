@@ -5,6 +5,8 @@ import com.mprtcz.tetris.logger.TetrisGameLogger;
 import javafx.scene.paint.Color;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,11 +19,6 @@ public class ConditionsChecker {
 
     private Map<Integer, Color> savedIndexesList = new HashMap<>();
     private int maxIndex;
-
-    public void setNumberOfColumns(int numberOfColumns) {
-        this.numberOfColumns = numberOfColumns;
-    }
-
     private int numberOfColumns;
 
     public ConditionsChecker(Map<Integer, Color> savedIndexesList, int maxIndex) {
@@ -34,42 +31,44 @@ public class ConditionsChecker {
         this.numberOfColumns = numberOfColumns;
     }
 
+    public void setNumberOfColumns(int numberOfColumns) {
+        this.numberOfColumns = numberOfColumns;
+    }
+
     public void setSavedIndexesList(Map<Integer, Color> savedIndexesList) {
         this.savedIndexesList = savedIndexesList;
     }
 
-    public ConditionsChecker(int numberOfColumns) {
-        this.numberOfColumns = numberOfColumns;
-    }
-
     private boolean checkIfIndexesAreWithinTheList(int[] indexes) {
-        for (int i : indexes) {
-            if (i >= maxIndex) {
-                logger.log(level, "Index not in range of the list: " + i + " maxIndex: " + maxIndex);
-                return false;
-            }
-        }
-        return true;
+        return !checkIfIndexFulfillsTheRequirement(
+                indexes,
+                integer -> integer >= maxIndex,
+                integer -> logger.log(level, "Index not in range of the list: " + integer + " maxIndex: " + maxIndex));
     }
 
     private boolean checkIfIndexesExistInAList(int[] indexes) {
-        for (int i : indexes) {
-            if (savedIndexesList.containsKey(i)) {
-                logger.log(level, "Index " + i + " exists in a list: " + savedIndexesList.toString());
-                return true;
-            }
-        }
-        return false;
+        return checkIfIndexFulfillsTheRequirement(
+                indexes,
+                integer -> savedIndexesList.containsKey(integer),
+                integer -> logger.log(level, "Index " + integer + " exists in a list: " + savedIndexesList.toString()));
     }
 
     private boolean checkIfIndexesAreLessThanZero(int[] indexes) {
-        for (int i : indexes) {
-            if (i < 0) {
-                logger.log(Level.WARNING, "Index " + i + " less than zero!");
+        return checkIfIndexFulfillsTheRequirement(
+                indexes,
+                integer -> integer < 0,
+                integer -> logger.log(Level.WARNING, "Index " + integer + " less than zero!"));
+    }
+
+    private boolean checkIfIndexFulfillsTheRequirement(
+            int[] indexes, Predicate<Integer> p, Consumer<Integer> messageToLog) {
+        return Arrays.stream(indexes).filter(value -> {
+            if(p.test(value)) {
+                messageToLog.accept(value);
                 return true;
             }
-        }
-        return false;
+            return false;
+        }).findAny().isPresent();
     }
 
     public boolean checkBorderCondition(int[] initialCoordinates, int[] targetCoordinates) {
@@ -95,7 +94,7 @@ public class ConditionsChecker {
 
     public boolean checkAllRotatingConditions(Shape shape) {
         logger.log(level, "Checking rotating conditions for shape: " + shape.toString());
-        boolean borderCondition = false;
+        boolean borderCondition;
         Shape.Orientation orientation = shape.getOrientation();
         int[] targetCoordinates = shape.getNextOrientationCoordinates();
 
@@ -153,13 +152,14 @@ public class ConditionsChecker {
     public boolean checkAllMovingConditions(int[] indexes) {
         logger.log(level, "Checking all conditions for indexes: " + Arrays.toString(indexes));
         boolean checkDuplicates = checkIfIndexesExistInAList(indexes);
-        logger.log(level, "checkIfIndexesExistInAList(indexes): " + checkIfIndexesExistInAList(indexes));
+        logger.log(level, "checkIfIndexesExistInAList(indexes): " + checkDuplicates);
         boolean checkIfWithin = checkIfIndexesAreWithinTheList(indexes);
-        logger.log(level, "checkIfIndexesAreWithinTheList(indexes): " + checkIfIndexesAreWithinTheList(indexes));
+        logger.log(level, "checkIfIndexesAreWithinTheList(indexes): " + checkIfWithin);
         boolean lessThanZero = checkIfIndexesAreLessThanZero(indexes);
-        logger.log(level, "checkIfIndexesAreLessThanZero(indexes): " + checkIfIndexesAreLessThanZero(indexes));
-        logger.log(level, "Returning: " + (!checkDuplicates && checkIfWithin && !lessThanZero));
-        return !checkDuplicates && checkIfWithin && !lessThanZero;
+        logger.log(level, "checkIfIndexesAreLessThanZero(indexes): " + lessThanZero);
+        boolean result = !checkDuplicates && checkIfWithin && !lessThanZero;
+        logger.log(level, "Returning: " + result);
+        return result;
     }
 
     public List<Integer> getIndexesOfFullRows(int numberOfColumns) {

@@ -28,49 +28,61 @@ public class CanvasDrawer {
 
     public CanvasDrawer(Canvas canvas) {
         this.canvas = canvas;
-        this.basicSquareSize = (int) canvas.getWidth()/numberOfColumns;
+        this.basicSquareSize = (int) canvas.getWidth() / numberOfColumns;
         determineNumberOfBasicSquares();
     }
 
-    CanvasDrawer(Canvas canvas, int numberOfColumns){
+    CanvasDrawer(Canvas canvas, int numberOfColumns) {
         this.canvas = canvas;
         this.numberOfColumns = numberOfColumns;
-        this.basicSquareSize = (int) canvas.getWidth()/numberOfColumns;
+        this.basicSquareSize = (int) canvas.getWidth() / numberOfColumns;
         determineNumberOfBasicSquares();
     }
 
-    private void determineNumberOfBasicSquares(){
-        this.numberOfBasicSquares = numberOfColumns * (int) (canvas.getHeight()/basicSquareSize);
+    private void determineNumberOfBasicSquares() {
+        this.numberOfBasicSquares = numberOfColumns * (int) (canvas.getHeight() / basicSquareSize);
     }
 
-    public void drawIndexesOnGraphicContext(Map<Integer, Color> indexesToDraw){
+    public void drawIndexesOnGraphicContext(Map<Integer, Color> indexesToDraw) {
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         prepareGraphicsContext(graphicsContext);
-        for(Map.Entry<Integer, Color> entry : indexesToDraw.entrySet()){
-            drawRoundColoredRectangle(graphicsContext, entry);
-        }
+        indexesToDraw.entrySet().forEach(
+                integerColorEntry -> drawRoundColoredRectangle(graphicsContext, integerColorEntry));
     }
 
     void drawRoundColoredRectangle(GraphicsContext graphicsContext, Map.Entry<Integer, Color> entry) {
         graphicsContext.setFill(entry.getValue());
-        graphicsContext.fillRoundRect(getXCoordinate(entry.getKey()), getYCoordinate(entry.getKey()), basicSquareSize, basicSquareSize, ARC_WIDTH, ARC_HEIGHT);
+        graphicsContext.fillRoundRect(
+                getXCoordinate(entry.getKey()),
+                getYCoordinate(entry.getKey()),
+                basicSquareSize,
+                basicSquareSize,
+                ARC_WIDTH,
+                ARC_HEIGHT
+        );
 
     }
 
     private void prepareGraphicsContext(GraphicsContext graphicsContext) {
-        graphicsContext.clearRect(0, 0, graphicsContext.getCanvas().getWidth(), graphicsContext.getCanvas().getHeight());
+        graphicsContext.clearRect(
+                0,
+                0,
+                graphicsContext.getCanvas().getWidth(),
+                graphicsContext.getCanvas().getHeight());
         graphicsContext.setStroke(Color.BLACK);
-        graphicsContext.strokeRect(0, 0, (numberOfColumns*basicSquareSize), (basicSquareSize*numberOfBasicSquares/numberOfColumns));
+        graphicsContext.strokeRect(
+                0,
+                0,
+                (numberOfColumns * basicSquareSize),
+                (basicSquareSize * numberOfBasicSquares / numberOfColumns));
     }
 
-    public void drawEndScreen(String points){
+    public void drawEndScreen(String points) {
         logger.log(level, "End screen");
 
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-
         initializeEndScreen(graphicsContext);
         displayEndMessage(graphicsContext, points);
-
     }
 
     private void initializeEndScreen(GraphicsContext graphicsContext) {
@@ -87,22 +99,18 @@ public class CanvasDrawer {
         graphicsContext.fillText(endMessageString, canvasMiddleWidth, canvasMiddleHeight);
     }
 
-    private int getXCoordinate(int index){
+    private int getXCoordinate(int index) {
         int xCoordinate = (index % numberOfColumns) * basicSquareSize;
-        if(index > numberOfBasicSquares -1){
-            return -1;
-        } else {
-            return xCoordinate;
-        }
+        return shouldReturnCoordinate(index, xCoordinate);
     }
 
-    private int getYCoordinate(int index){
+    private int getYCoordinate(int index) {
         int yCoordinate = (index / numberOfColumns) * basicSquareSize;
-        if(index > numberOfBasicSquares -1){
-            return -1;
-        } else {
-            return yCoordinate;
-        }
+        return shouldReturnCoordinate(index, yCoordinate);
+    }
+
+    private int shouldReturnCoordinate(int index, int coordinate) {
+        return index > numberOfBasicSquares - 1 ? -1 : coordinate;
     }
 
     public int getNumberOfColumns() {

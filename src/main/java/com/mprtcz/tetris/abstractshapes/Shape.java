@@ -179,8 +179,7 @@ public abstract class Shape {
 
     public boolean pullShapeIndexesDown() {
         if (conditionsChecker.checkAllMovingConditions(getCoordinatesForIndex(initialCoordinate + numberOfColumns))) {
-            logger.log(level, "initial coordinate " + initialCoordinate);
-            logger.log(level, "number of columns: " + numberOfColumns);
+            logger.log(level, "initial coordinate " + initialCoordinate + "number of columns: " + numberOfColumns);
             this.initialCoordinate += numberOfColumns;
             logger.log(level, "initial coordinate " + initialCoordinate);
             return true;

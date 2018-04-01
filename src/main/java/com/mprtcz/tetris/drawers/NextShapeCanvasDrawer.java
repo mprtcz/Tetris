@@ -6,9 +6,6 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-/**
- * Created by Azet on 2016-05-26.
- */
 public class NextShapeCanvasDrawer extends CanvasDrawer {
     private Canvas canvas;
 
@@ -18,12 +15,11 @@ public class NextShapeCanvasDrawer extends CanvasDrawer {
     }
 
     @Override
-    public void drawIndexesOnGraphicContext(Map<Integer, Color> indexesToDraw){
+    public void drawIndexesOnGraphicContext(Map<Integer, Color> coloredIndexesToDraw) {
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initializeGraphicsContext(graphicsContext);
-        for(Map.Entry<Integer, Color> entry : indexesToDraw.entrySet()){
-            drawRoundColoredRectangle(graphicsContext, entry);
-        }
+        coloredIndexesToDraw.entrySet().forEach(
+                integerColorEntry -> drawRoundColoredRectangle(graphicsContext, integerColorEntry));
     }
 
     private void initializeGraphicsContext(GraphicsContext graphicsContext) {
@@ -33,7 +29,7 @@ public class NextShapeCanvasDrawer extends CanvasDrawer {
 
     private void drawFrame(GraphicsContext graphicsContext) {
         int frameWidth = super.getBasicSquareSize() * super.getNumberOfColumns();
-        int frameHeight = super.getBasicSquareSize() * (super.getNumberOfBasicSquares()/super.getNumberOfColumns());
+        int frameHeight = super.getBasicSquareSize() * (super.getNumberOfBasicSquares() / super.getNumberOfColumns());
         graphicsContext.setStroke(Color.RED);
         graphicsContext.strokeRect(0, 0, frameWidth, frameHeight);
     }
