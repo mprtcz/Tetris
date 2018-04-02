@@ -56,11 +56,11 @@ public class SavedIndexes {
 
     public Map<Integer, Color> drawShape(Shape shape) {
         Map<Integer, Color> toDrawList = new HashMap<>();
-        if (shape != null) {
-            for (Integer i : shape.getCoordinatesForIndex(3)) {
-                toDrawList.put(i, shape.getColor());
-            }
+        if(shape == null) {
+            return toDrawList;
         }
+        Arrays.stream(shape.getCoordinatesForIndex(3))
+                .forEach(value -> toDrawList.put(value, shape.getColor()));
         return toDrawList;
     }
 
@@ -108,9 +108,7 @@ public class SavedIndexes {
         ConditionsChecker conditionsChecker = new ConditionsChecker(savedIndexes, maxIndex);
         List<Integer> rowsToRemove = conditionsChecker.getIndexesOfFullRows(numberOfColumns);
         List<Integer> indexesToRemove = getIndexesFromRowsToRemove(rowsToRemove);
-        if (rowsToRemove.size() > 0) {
-            indexesToRemove.forEach(this::colorIndexAsRed);
-        }
+        indexesToRemove.forEach(this::colorIndexAsRed);
         return rowsToRemove;
     }
 

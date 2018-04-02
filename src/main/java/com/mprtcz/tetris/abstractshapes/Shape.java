@@ -46,7 +46,10 @@ public abstract class Shape {
         }
     }
 
-    public static Shape shapeFactory(ShapeType shapeType, int numberOfColumns, int maxListIndex, Map<Integer, Color> savedIndexes) {
+    public static Shape shapeFactory(ShapeType shapeType,
+                                     int numberOfColumns,
+                                     int maxListIndex,
+                                     Map<Integer, Color> savedIndexes) {
         switch (shapeType) {
             case I_shape:
                 return new IShape(numberOfColumns, maxListIndex, savedIndexes);
@@ -75,6 +78,14 @@ public abstract class Shape {
 
         private String stringValue;
         private int degree;
+        private static Map<Orientation, Orientation> nextOrientations = new HashMap<>();
+
+        static {
+            nextOrientations.put(BASIC, DEG90);
+            nextOrientations.put(DEG90, DEG180);
+            nextOrientations.put(DEG180, DEG270);
+            nextOrientations.put(DEG270, BASIC);
+        }
 
         Orientation(String value, int degree) {
             this.stringValue = value;
@@ -85,23 +96,13 @@ public abstract class Shape {
             return degree;
         }
 
+        static Orientation getNextOrientation(Orientation orientation) {
+            return nextOrientations.get(orientation);
+        }
+
         @Override
         public String toString() {
             return stringValue;
-        }
-    }
-
-    private static Orientation getNextOrientation(Orientation orientation) {
-        if (orientation == Orientation.BASIC) {
-            return Orientation.DEG90;
-        } else if (orientation == Orientation.DEG90) {
-            return Orientation.DEG180;
-        } else if (orientation == Orientation.DEG180) {
-            return Orientation.DEG270;
-        } else if (orientation == Orientation.DEG270) {
-            return Orientation.BASIC;
-        } else {
-            return Orientation.BASIC;
         }
     }
 
@@ -133,11 +134,11 @@ public abstract class Shape {
     }
 
     private int[] getCoordinates() {
-        return  getCoordinatesForIndex(initialCoordinate);
+        return getCoordinatesForIndex(initialCoordinate);
     }
 
     public int[] getNextOrientationCoordinates() {
-        return rotator.rotateByDegree(initialCoordinate, getNextOrientation(orientation).getDegree());
+        return rotator.rotateByDegree(initialCoordinate, Orientation.getNextOrientation(orientation).getDegree());
     }
 
     private int[] getRightShiftedCoordinates() {
@@ -154,16 +155,15 @@ public abstract class Shape {
 
     public void moveRight() {
         logger.log(level, "");
-        int[] coordinates = getRightShiftedCoordinates();
-        if (conditionsChecker.checkAllMovingConditions(coordinates) &&
-                conditionsChecker.checkBorderCondition(getCoordinates(), coordinates)) {
-            this.initialCoordinate = coordinates[0];
-        }
+        moveToTheSide(getRightShiftedCoordinates());
     }
 
     public void moveLeft() {
         logger.log(level, "");
-        int[] coordinates = getLeftShiftedCoordinates();
+        moveToTheSide(getLeftShiftedCoordinates());
+    }
+
+    private void moveToTheSide(int[] coordinates) {
         if (conditionsChecker.checkAllMovingConditions(coordinates) &&
                 conditionsChecker.checkBorderCondition(getCoordinates(), coordinates)) {
             this.initialCoordinate = coordinates[0];
@@ -173,7 +173,7 @@ public abstract class Shape {
     public void rotateShape() {
         logger.log(level, "");
         if (conditionsChecker.checkAllRotatingConditions(this)) {
-            this.orientation = Shape.getNextOrientation(orientation);
+            this.orientation = Orientation.getNextOrientation(orientation);
         }
     }
 
