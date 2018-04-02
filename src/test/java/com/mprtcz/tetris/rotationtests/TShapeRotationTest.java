@@ -1,4 +1,4 @@
-package com.mprtcz.tetris2.rotationtests;
+package com.mprtcz.tetris.rotationtests;
 
 import com.mprtcz.tetris.abstractshapes.Shape;
 import com.mprtcz.tetris.abstractshapes.TShape;

@@ -1,4 +1,4 @@
-package com.mprtcz.tetris2;
+package com.mprtcz.tetris;
 
 import com.mprtcz.tetris.listoperators.ConditionsChecker;
 import javafx.scene.paint.Color;
