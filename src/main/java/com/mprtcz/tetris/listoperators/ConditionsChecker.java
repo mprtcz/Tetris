@@ -37,8 +37,8 @@ public class ConditionsChecker {
         this.numberOfColumns = numberOfColumns;
     }
 
-    public void setSavedIndexesList(Map<Integer, Color> savedIndexesList) {
-        this.savedIndexesList = savedIndexesList;
+    public void setSavedIndexesList(Map<Integer, Color> savedIndexesMap) {
+        this.savedIndexesList = savedIndexesMap;
     }
 
     private boolean checkIfIndexesAreWithinTheList(int[] indexes) {

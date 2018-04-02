@@ -115,7 +115,7 @@ class GameAgent {
     }
 
     private void drawOnCanvasDrawer() {
-        Platform.runLater(() -> canvasDrawer.drawIndexesOnGraphicContext(savedIndexes.getIndexesToDraw(shape)));
+        Platform.runLater(() -> canvasDrawer.drawIndexesOnGraphicContext(savedIndexes.getIndexesToDrawWith(shape)));
     }
 
     private void initializeNextShape() {

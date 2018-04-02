@@ -21,7 +21,6 @@ public class JShape extends Shape {
         this.numberOfColumns = numberOfColumns;
     }
 
-
     @Override
     public int[] getBasicCoordinates(int destinationIndex) {
         int[] basicCoords = new int[4];

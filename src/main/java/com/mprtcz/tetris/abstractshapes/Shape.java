@@ -217,7 +217,7 @@ public abstract class Shape {
         this.color = color;
     }
 
-    private Color getRandomColor() {
+    public Color getRandomColor() {
         String[] materialColors = {
                 "#39add1", // light blue
                 "#3079ab", // dark blue

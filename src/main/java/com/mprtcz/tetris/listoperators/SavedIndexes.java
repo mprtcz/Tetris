@@ -18,7 +18,7 @@ public class SavedIndexes {
     private final static Logger logger = Logger.getLogger(TetrisGameLogger.class.getName());
     private Level level = Level.CONFIG;
 
-    private Map<Integer, Color> savedIndexes;
+    Map<Integer, Color> savedIndexes;
     private int maxIndex;
     private int numberOfColumns;
 
@@ -36,16 +36,21 @@ public class SavedIndexes {
         this.savedIndexes = savedIndexes;
     }
 
-    public Map<Integer, Color> getIndexesToDraw(Shape shape) {
-        Map<Integer, Color> toDrawList = new ConcurrentHashMap<>();
-        for (Map.Entry<Integer, Color> i : savedIndexes.entrySet()) {
-            toDrawList.put(i.getKey(), i.getValue());
+    public Map<Integer, Color> getIndexesToDrawWith(Shape shape) {
+
+        Map<Integer, Color> toDrawList  = savedIndexes
+                .entrySet()
+                .stream()
+                .collect(ConcurrentHashMap::new,
+                (integerColorMap, integerColorEntry) ->
+                        integerColorMap.put(integerColorEntry.getKey(), integerColorEntry.getValue()),
+                (icMap, icMap2) -> {});
+
+        if (shape == null) {
+            return toDrawList;
         }
-        if (shape != null) {
-            for (Integer i : shape.getShapeCoordinates()) {
-                toDrawList.put(i, shape.getColor());
-            }
-        }
+        Arrays.stream(shape.getShapeCoordinates())
+                .forEach(value -> toDrawList.put(value, shape.getColor()));
         return toDrawList;
     }
 
