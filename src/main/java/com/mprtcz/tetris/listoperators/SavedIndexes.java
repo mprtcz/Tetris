@@ -4,10 +4,7 @@ import com.mprtcz.tetris.abstractshapes.Shape;
 import com.mprtcz.tetris.logger.TetrisGameLogger;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,11 +58,9 @@ public class SavedIndexes {
     }
 
     public void saveFallenShape(Shape shape) {
-        for (Integer i : shape.getShapeCoordinates()) {
-            if (!savedIndexes.containsKey(i)) {
-                savedIndexes.put(i, shape.getColor());
-            }
-        }
+        Arrays.stream(shape.getShapeCoordinates())
+                .filter(value -> !savedIndexes.containsKey(value))
+                .forEach(value -> savedIndexes.put(value, shape.getColor()));
     }
 
     private List<Integer> getIndexesFromRowsToRemove(List<Integer> rows) {
@@ -94,12 +89,10 @@ public class SavedIndexes {
     }
 
     public boolean canShapeBeAddedToGame(Shape shape) {
-        for (int i : shape.getShapeCoordinates()) {
-            if (savedIndexes.containsKey(i)) {
-                return false;
-            }
-        }
-        return true;
+        return !Arrays.stream(shape.getShapeCoordinates())
+                .filter(value -> savedIndexes.containsKey(value))
+                .findFirst()
+                .isPresent();
     }
 
     public List<Integer> getAndMarkRowsToBeRemoved() {
@@ -113,14 +106,12 @@ public class SavedIndexes {
     }
 
     public int removeListedRowsAndAddScore(List<Integer> rowsToRemove, int score) {
-        List<Integer> indexesToRemove = getIndexesFromRowsToRemove(rowsToRemove);
-        if (rowsToRemove.size() > 0) {
-            score += rowsToRemove.size() * 10;
-            for (Integer i : indexesToRemove) {
-                savedIndexes.remove(i);
-            }
-            pullRemainingBricksDown(rowsToRemove);
+        if (rowsToRemove.isEmpty()) {
+            return score;
         }
+        score += rowsToRemove.size() * 10;
+        getIndexesFromRowsToRemove(rowsToRemove).forEach(integer -> savedIndexes.remove(integer));
+        pullRemainingBricksDown(rowsToRemove);
         return score;
     }
 
